@@ -6,3 +6,4 @@ This module saves all 404 url to a database table.
 - It includes a count so you can see wich 404 urls needs you attension first.
 - Directly add a permanent redirect url via the adminpanel to fix the 404 problem for future calls
 
+System > Tools > 404 pages
