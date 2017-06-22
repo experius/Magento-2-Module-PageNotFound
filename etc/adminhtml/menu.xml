@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add action="experius_pagenotfound/pagenotfound/index" id="Experius::experius_page_not_found" module="Experius_PageNotFound" parent="Magento_Backend::system_tools" resource="Magento_Backend::content" sortOrder="9999" title="404 Pages"/>
+	</menu>
+</config>

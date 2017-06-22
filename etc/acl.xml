@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+	<acl>
+		<resources>
+			<resource id="Magento_Backend::admin">
+				<resource id="Experius_PageNotFound::page_not_found" sortOrder="10" title="page_not_found">
+					<resource id="Experius_PageNotFound::page_not_found_save" sortOrder="10" title="Save page_not_found"/>
+					<resource id="Experius_PageNotFound::page_not_found_delete" sortOrder="20" title="Delete page_not_found"/>
+					<resource id="Experius_PageNotFound::page_not_found_update" sortOrder="30" title="Update page_not_found"/>
+					<resource id="Experius_PageNotFound::page_not_found_view" sortOrder="40" title="View page_not_found"/>
+				</resource>
+			</resource>
+		</resources>
+	</acl>
+</config>

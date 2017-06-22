@@ -1,0 +1,25 @@
+{
+    "name": "experius/module-pagenotfound",
+    "description": "",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Mage2Gen",
+            "email": "info@mage2gen.com"
+        },
+        {
+            "name": "Derrick Heesbeen",
+            "email": "derrick@experius.nl"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Experius\\PageNotFound\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}
