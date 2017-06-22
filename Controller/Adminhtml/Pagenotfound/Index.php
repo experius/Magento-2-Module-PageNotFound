@@ -30,7 +30,7 @@ class Index extends \Magento\Backend\App\Action
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
-            $resultPage->getConfig()->getTitle()->prepend(__("404 Pages"));
+            $resultPage->getConfig()->getTitle()->prepend(__("404 Reports"));
             return $resultPage;
     }
 }
