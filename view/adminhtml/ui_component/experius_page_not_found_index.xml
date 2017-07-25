@@ -50,15 +50,15 @@
 	<columns name="experius_page_not_found_columns">
 		<argument name="data" xsi:type="array">
 			<item name="config" xsi:type="array">
-				<item name="editorConfig" xsi:type="array">
-					<item name="selectProvider" xsi:type="string">experius_page_not_found_index.experius_page_not_found_index.experius_page_not_found_columns.ids</item>
-					<item name="enabled" xsi:type="boolean">true</item>
-					<item name="indexField" xsi:type="string">page_not_found_id</item>
-					<item name="clientConfig" xsi:type="array">
-						<item name="saveUrl" path="experius_pagenotfound/pagenotfound/inlineEdit" xsi:type="url"/>
-						<item name="validateBeforeSave" xsi:type="boolean">false</item>
-					</item>
-				</item>
+				<!--<item name="editorConfig" xsi:type="array">-->
+					<!--<item name="selectProvider" xsi:type="string">experius_page_not_found_index.experius_page_not_found_index.experius_page_not_found_columns.ids</item>-->
+					<!--<item name="enabled" xsi:type="boolean">true</item>-->
+					<!--<item name="indexField" xsi:type="string">page_not_found_id</item>-->
+					<!--<item name="clientConfig" xsi:type="array">-->
+						<!--<item name="saveUrl" path="experius_pagenotfound/pagenotfound/inlineEdit" xsi:type="url"/>-->
+						<!--<item name="validateBeforeSave" xsi:type="boolean">false</item>-->
+					<!--</item>-->
+				<!--</item>-->
 				<item name="childDefaults" xsi:type="array">
 					<item name="fieldAction" xsi:type="array">
 						<item name="provider" xsi:type="string">experius_page_not_found_index.experius_page_not_found_index.experius_page_not_found_columns_editor</item>
@@ -86,7 +86,7 @@
 				<!--</item>-->
 			<!--</argument>-->
 		<!--</column>-->
-		<column name="from_url">
+		<column name="from_url" class="Experius\PageNotFound\Ui\Component\Listing\Column\Link">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -97,17 +97,11 @@
 							<item name="required-entry" xsi:type="boolean">false</item>
 						</item>
 					</item>
+					<item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
 				</item>
 			</argument>
 		</column>
-		<actionsColumn class="Experius\PageNotFound\Ui\Component\Listing\Column\PagenotfoundActions" name="actions">
-			<argument name="data" xsi:type="array">
-				<item name="config" xsi:type="array">
-					<item name="indexField" xsi:type="string">page_not_found_id</item>
-				</item>
-			</argument>
-		</actionsColumn>
-		<column name="to_url">
+		<column name="to_url"  class="Experius\PageNotFound\Ui\Component\Listing\Column\Link">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -118,6 +112,7 @@
 							<item name="required-entry" xsi:type="boolean">false</item>
 						</item>
 					</item>
+					<item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
 				</item>
 			</argument>
 		</column>
@@ -137,5 +132,12 @@
 				</item>
 			</argument>
 		</column>
+		<actionsColumn class="Experius\PageNotFound\Ui\Component\Listing\Column\PagenotfoundActions" name="actions">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="indexField" xsi:type="string">page_not_found_id</item>
+				</item>
+			</argument>
+		</actionsColumn>
 	</columns>
 </listing>

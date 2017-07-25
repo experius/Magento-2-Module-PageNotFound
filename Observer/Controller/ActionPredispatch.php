@@ -22,6 +22,15 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $this->pageNotFoundFactory = $pageNotFoundFactory;
         $this->response = $response;
         $this->actionFactory = $actionFactory;
+        $this->urlParts = [];
+    }
+
+    private function excludeParamsInFromUrl(){
+        return true;
+    }
+
+    private function includeParamsInRedirect(){
+        return true;
     }
 
     public function execute(
@@ -31,6 +40,8 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         /* @var $request \Magento\Framework\App\RequestInterface */
         $request = $observer->getRequest();
 
+        $this->urlParts = parse_url($this->url->getCurrentUrl());
+
         /* @var $action \Magento\Cms\Controller\Noroute\Index */
         $action = $observer->getControllerAction();
 
@@ -39,17 +50,20 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
     }
 
     protected function getCurrentUrl(){
-        return $this->stripUrl($this->url->getCurrentUrl());
+        return $this->stripUrl();
     }
 
-    protected function stripUrl($url){
+    protected function stripUrl(){
 
         $excludeParams = [];
 
-        $urlSplit = explode('?',$url);
-        $urlParams = explode('&',end($urlSplit));
+        $url_parts = $this->urlParts;
 
-        $url = reset($urlSplit);
+        $url = $this->url->getCurrentUrl();
+
+        if($this->excludeParamsInFromUrl()) {
+            $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'];
+        }
 
         return $url;
     }
@@ -82,6 +96,11 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
     protected function redirect($request, $url, $code)
     {
+
+        if($this->includeParamsInRedirect() && isset($this->urlParts['query'])){
+            $url = $url . '?' . $this->urlParts['query'];
+        }
+
         $this->response->setRedirect($url,$code);
         $request->setDispatched(true);
         return $this->actionFactory->create('Magento\Framework\App\Action\Redirect');
