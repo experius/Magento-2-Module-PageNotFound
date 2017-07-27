@@ -16,7 +16,7 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Experius\PageNotFound\Model\ResourceModel\PageNotFound as ResourcePageNotFound;
 use Experius\PageNotFound\Model\ResourceModel\PageNotFound\CollectionFactory as PageNotFoundCollectionFactory;
 
-class PageNotFoundRepository implements page\not\foundRepositoryInterface
+class PageNotFoundRepository implements PageNotFoundRepositoryInterface
 {
 
     private $storeManager;
