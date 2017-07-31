@@ -101,8 +101,13 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
             $url = $url . '?' . $this->urlParts['query'];
         }
 
-        $this->response->setRedirect($url,$code);
-        $request->setDispatched(true);
-        return $this->actionFactory->create('Magento\Framework\App\Action\Redirect');
+        header("HTTP/1.1 301 Moved Permanently");
+        header("Location: " . $url);
+        exit();
+
+        // TODO make this work with fpc.
+        //$this->response->setRedirect($url,$code);
+        //$request->setDispatched(true);
+        //return $this->actionFactory->create('Magento\Framework\App\Action\Redirect');
     }
 }
