@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="pagenotfound" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+            <label>404 Reports</label>
+            <tab>advanced</tab>
+            <resource>Experius_PageNotFound::config_experius_pagenotfound</resource>
+            <group id="general" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+                <label>General</label>
+                <field id="enabled" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
+                    <label>Enabled</label>
+                    <comment/>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="exclude_params_from_url" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
+                    <label>Exclude Params from the From Url</label>
+                    <comment/>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="include_params_in_redirect" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
+                    <label>Include Params in redirect</label>
+                    <comment/>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="excluded_params" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="text">
+                    <label>Filter Params</label>
+                    <comment>comma separated. For example language,p,id</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

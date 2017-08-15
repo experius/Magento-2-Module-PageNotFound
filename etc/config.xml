@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <pagenotfound>
+            <general>
+                <enabled>1</enabled>
+                <exclude_params_from_url>1</exclude_params_from_url>
+                <include_params_in_redirect>1</include_params_in_redirect>
+                <excluded_params>id</excluded_params>
+            </general>
+        </pagenotfound>
+    </default>
+</config>

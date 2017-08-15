@@ -12,63 +12,96 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
     protected $actionFactory;
 
+    protected $scopeConfig;
+
+    protected $cacheState;
+
+    protected $request;
+
+    protected $action;
+
     public function __construct(
         \Magento\Framework\UrlInterface $url,
         \Experius\PageNotFound\Model\PageNotFoundFactory $pageNotFoundFactory,
         \Magento\Framework\App\ResponseInterface $response,
-        \Magento\Framework\App\ActionFactory $actionFactory
+        \Magento\Framework\App\ActionFactory $actionFactory,
+        \Magento\Framework\App\Cache\State $cacheState,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     ) {
         $this->url = $url;
         $this->pageNotFoundFactory = $pageNotFoundFactory;
         $this->response = $response;
         $this->actionFactory = $actionFactory;
         $this->urlParts = [];
+        $this->cacheState = $cacheState;
+        $this->scopeConfig = $scopeConfig;
+    }
+
+    private function isEnabled(){
+        return $this->scopeConfig->getValue('pagenotfound/general/enabled',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     private function excludeParamsInFromUrl(){
-        return true;
+        return $this->scopeConfig->getValue('pagenotfound/general/exclude_params_from_url',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     private function includeParamsInRedirect(){
-        return true;
+        return $this->scopeConfig->getValue('pagenotfound/general/include_params_in_redirect',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    private function excludedParams(){
+        return explode(',',$this->scopeConfig->getValue('pagenotfound/general/excluded_params',\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
 
     public function execute(
         \Magento\Framework\Event\Observer $observer
     ) {
 
-        /* @var $request \Magento\Framework\App\RequestInterface */
-        $request = $observer->getRequest();
+        if(!$this->isEnabled()){
+            return;
+        }
+
+        $this->request = $observer->getRequest();
+        $this->action = $observer->getControllerAction();
+
+        foreach (['full_page'] as $type) {
+            $this->cacheState->setEnabled($type, false);
+        }
 
         $this->urlParts = parse_url($this->url->getCurrentUrl());
 
-        /* @var $action \Magento\Cms\Controller\Noroute\Index */
-        $action = $observer->getControllerAction();
+        $this->savePageNotFound($this->getCurrentUrl());
 
-        $this->savePageNotFound($this->getCurrentUrl(),$request);
+    }
 
+    /* @return \Magento\Framework\App\RequestInterface */
+    protected function getRequest(){
+        return $this->request;
+    }
+
+    /* @return $action \Magento\Cms\Controller\Noroute\Index */
+    protected function getAction(){
+        return $this->action;
     }
 
     protected function getCurrentUrl(){
-        return $this->stripUrl();
+        return $this->stripFromUrl();
     }
 
-    protected function stripUrl(){
-
-        $excludeParams = [];
+    protected function stripFromUrl(){
 
         $url_parts = $this->urlParts;
 
-        $url = $this->url->getCurrentUrl();
-
         if($this->excludeParamsInFromUrl()) {
             $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'];
+        } else {
+            $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . '?' . $this->getParams();
         }
 
         return $url;
     }
 
-    protected function savePageNotFound($fromUrl,$request){
+    protected function savePageNotFound($fromUrl){
 
         /* @var $pageNotFoundModel \Experius\PageNotFound\Model\PageNotFound */
         $pageNotFoundModel = $this->pageNotFoundFactory->create();
@@ -90,24 +123,31 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $pageNotFoundModel->save();
 
         if($pageNotFoundModel->getToUrl()) {
-            return $this->redirect($request, $pageNotFoundModel->getToUrl(), '301');
+            return $this->redirect($pageNotFoundModel->getToUrl(), '301');
         }
     }
 
-    protected function redirect($request, $url, $code)
-    {
+    protected function getParams(){
 
+        $queryArray = $this->getRequest()->getParams();
+
+        foreach($queryArray as $key=>$value){
+            if(in_array($key,$this->excludedParams())){
+                unset($queryArray[$key]);
+            }
+        }
+        return http_build_query($queryArray);
+    }
+
+    protected function redirect($url, $code)
+    {
         if($this->includeParamsInRedirect() && isset($this->urlParts['query'])){
-            $url = $url . '?' . $this->urlParts['query'];
+            $url = $url . '?' . $this->getParams();
         }
 
-        header("HTTP/1.1 301 Moved Permanently");
-        header("Location: " . $url);
-        exit();
-
-        // TODO make this work with fpc.
-        //$this->response->setRedirect($url,$code);
-        //$request->setDispatched(true);
-        //return $this->actionFactory->create('Magento\Framework\App\Action\Redirect');
+        $this->response->setRedirect($url,$code);
+        $this->getRequest()->setDispatched(true);
+        $this->getRequest()->setParam('no_cache', true);
+        return $this->actionFactory->create('Magento\Framework\App\Action\Redirect');
     }
 }
