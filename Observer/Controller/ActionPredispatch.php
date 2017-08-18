@@ -19,6 +19,8 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
     protected $request;
 
     protected $action;
+    
+    protected $urlParts = [];
 
     public function __construct(
         \Magento\Framework\UrlInterface $url,
@@ -32,7 +34,6 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $this->pageNotFoundFactory = $pageNotFoundFactory;
         $this->response = $response;
         $this->actionFactory = $actionFactory;
-        $this->urlParts = [];
         $this->cacheState = $cacheState;
         $this->scopeConfig = $scopeConfig;
     }
