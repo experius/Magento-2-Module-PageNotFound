@@ -7,6 +7,7 @@
                 <exclude_params_from_url>1</exclude_params_from_url>
                 <include_params_in_redirect>1</include_params_in_redirect>
                 <excluded_params>id</excluded_params>
+                <included_params/>
             </general>
         </pagenotfound>
     </default>

@@ -53,6 +53,10 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         return explode(',',$this->scopeConfig->getValue('pagenotfound/general/excluded_params',\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
 
+    private function includedParams(){
+        return explode(',',$this->scopeConfig->getValue('pagenotfound/general/included_params',\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+    }
+
     public function execute(
         \Magento\Framework\Event\Observer $observer
     ) {
@@ -93,9 +97,13 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $url_parts = $this->urlParts;
 
         if($this->excludeParamsInFromUrl()) {
-            $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'];
+            // remove all params from url and add only the configured ones. <included_params>
+            $params = (!empty($this->getParams(false))) ? '?' . $this->getParams(false) : '';
+            $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . $params;
         } else {
-            $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . '?' . $this->getParams();
+            // add all params except the excluded ones. <excluded_params>
+            $params = (!empty($this->getParams(true))) ? '?' . $this->getParams(true) : '';
+            $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . $params;
         }
 
         return $url;
@@ -127,22 +135,34 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         }
     }
 
-    protected function getParams(){
+    protected function getParams($exclude=true){
 
         $queryArray = $this->getRequest()->getParams();
 
+        $unsetParams = ($exclude) ? $this->excludedParams() : $this->includedParams();
+
         foreach($queryArray as $key=>$value){
-            if(in_array($key,$this->excludedParams())){
-                unset($queryArray[$key]);
+
+            if($exclude){
+                if(in_array($key,$unsetParams) || in_array(strtolower($key),$unsetParams)){
+                    unset($queryArray[$key]);
+                }
+            } else {
+                if(!in_array($key,$unsetParams) || !in_array(strtolower($key),$unsetParams)){
+                    unset($queryArray[$key]);
+                }
             }
+
         }
+
         return http_build_query($queryArray);
     }
 
     protected function redirect($url, $code)
     {
         if($this->includeParamsInRedirect() && isset($this->urlParts['query'])){
-            $url = $url . '?' . $this->getParams();
+            // add all params to redirect url except the excluded ones. <excluded_params>
+            $url = $url . '?' . $this->getParams(true);
         }
 
         $this->response->setRedirect($url,$code);
