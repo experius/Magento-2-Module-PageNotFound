@@ -42,20 +42,12 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         return $this->scopeConfig->getValue('pagenotfound/general/enabled',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
-    private function excludeParamsInFromUrl(){
-        return $this->scopeConfig->getValue('pagenotfound/general/exclude_params_from_url',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    private function includedParamsInRedirect(){
+        return explode(',',$this->scopeConfig->getValue('pagenotfound/general/included_params_redirect',\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
 
-    private function includeParamsInRedirect(){
-        return $this->scopeConfig->getValue('pagenotfound/general/include_params_in_redirect',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-    }
-
-    private function excludedParams(){
-        return explode(',',$this->scopeConfig->getValue('pagenotfound/general/excluded_params',\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-    }
-
-    private function includedParams(){
-        return explode(',',$this->scopeConfig->getValue('pagenotfound/general/included_params',\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+    private function includedParamsInFromUrl(){
+        return explode(',',$this->scopeConfig->getValue('pagenotfound/general/included_params_from_url',\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
 
     public function execute(
@@ -97,15 +89,9 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
         $url_parts = $this->urlParts;
 
-        if($this->excludeParamsInFromUrl()) {
-            // remove all params from url and add only the configured ones. <included_params>
-            $params = (!empty($this->getParams(false))) ? '?' . $this->getParams(false) : '';
-            $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . $params;
-        } else {
-            // add all params except the excluded ones. <excluded_params>
-            $params = (!empty($this->getParams(true))) ? '?' . $this->getParams(true) : '';
-            $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . $params;
-        }
+        // remove all params from url and add only the configured ones. <included_params>
+        $params = (!empty($this->getParams(false))) ? '?' . $this->getParams(false) : '';
+        $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . $params;
 
         return $url;
     }
@@ -136,22 +122,16 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         }
     }
 
-    protected function getParams($exclude=true){
+    protected function getParams($redirect=true){
 
         $queryArray = $this->getRequest()->getParams();
 
-        $unsetParams = ($exclude) ? $this->excludedParams() : $this->includedParams();
+        $unsetParams = ($redirect) ? $this->includedParamsInRedirect() : $this->includedParamsInFromUrl();
 
         foreach($queryArray as $key=>$value){
 
-            if($exclude){
-                if(in_array($key,$unsetParams) || in_array(strtolower($key),$unsetParams)){
-                    unset($queryArray[$key]);
-                }
-            } else {
-                if(!in_array($key,$unsetParams) || !in_array(strtolower($key),$unsetParams)){
-                    unset($queryArray[$key]);
-                }
+            if(!in_array($key,$unsetParams) || !in_array(strtolower($key),$unsetParams)){
+                unset($queryArray[$key]);
             }
 
         }
@@ -161,10 +141,9 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
     protected function redirect($url, $code)
     {
-        if($this->includeParamsInRedirect() && isset($this->urlParts['query'])){
-            // add all params to redirect url except the excluded ones. <excluded_params>
-            $url = $url . '?' . $this->getParams(true);
-        }
+        // add all configured params to redirect url. <included_params_redirect>
+        $params = (!empty($this->getParams(true))) ? '?' . $this->getParams(true) : '';
+        $url = $url . $params;
 
         $this->response->setRedirect($url,$code);
         $this->getRequest()->setDispatched(true);

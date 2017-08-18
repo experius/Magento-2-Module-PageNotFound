@@ -4,10 +4,8 @@
         <pagenotfound>
             <general>
                 <enabled>1</enabled>
-                <exclude_params_from_url>1</exclude_params_from_url>
-                <include_params_in_redirect>1</include_params_in_redirect>
-                <excluded_params>id</excluded_params>
-                <included_params/>
+                <included_params_redirect/>
+                <included_params_from_url/>
             </general>
         </pagenotfound>
     </default>

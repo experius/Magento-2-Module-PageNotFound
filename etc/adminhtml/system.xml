@@ -12,22 +12,12 @@
                     <comment/>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="exclude_params_from_url" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
-                    <label>Remove all Params from the From Url</label>
-                    <comment/>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="included_params" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-                    <label>Included params for the From Url (Ignored in Remove all Params)</label>
+                <field id="included_params_from_url" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+                    <label>Included Params in From Url</label>
                     <comment>comma separated. For example language,p,id</comment>
                 </field>
-                <field id="include_params_in_redirect" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="select">
-                    <label>Transport all Params to redirect</label>
-                    <comment/>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="excluded_params" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
-                    <label>Exclude params for transport to redirect url</label>
+                <field id="included_params_redirect" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
+                    <label>Included Params in To Url</label>
                     <comment>comma separated. For example language,p,id</comment>
                 </field>
             </group>
