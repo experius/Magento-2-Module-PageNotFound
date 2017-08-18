@@ -139,10 +139,19 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         return http_build_query($queryArray);
     }
 
+    protected function urlHasParams($url){
+        $urlParts = parse_url($url);
+        if(isset($urlParts['query']) && $urlParts['query']){
+            return true;
+        }
+        return false;
+    }
+
     protected function redirect($url, $code)
     {
         // add all configured params to redirect url. <included_params_redirect>
-        $params = (!empty($this->getParams(true))) ? '?' . $this->getParams(true) : '';
+        $queryStart = ($this->urlHasParams($url)) ? '&' : '?';
+        $params = (!empty($this->getParams(true))) ? $queryStart . $this->getParams(true) : '';
         $url = $url . $params;
 
         $this->response->setRedirect($url,$code);
