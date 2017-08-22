@@ -19,7 +19,7 @@
 	<type name="Magento\Framework\Console\CommandList">
 		<arguments>
 			<argument name="commands" xsi:type="array">
-				<item name="redirects" xsi:type="object">Experius\PageNotFound\Console\Command\Import</item>
+				<item name="experius_pagenotfound_import" xsi:type="object">Experius\PageNotFound\Console\Command\Import</item>
 			</argument>
 		</arguments>
 	</type>
