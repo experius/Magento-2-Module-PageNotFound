@@ -72,12 +72,12 @@ class Import extends Command
         $count = 1;
         foreach($csvRows as $csvRow){
 
-            $fromUrl = $this->replaceFromUrlDomain($csvRow[0]);
-            $toUrl = $this->replaceToUrlDomain($csvRow[1]);
-
-            if(!$toUrl){
+            if(!$csvRow[1]){
                 continue;
             }
+
+            $fromUrl = $this->replaceFromUrlDomain($csvRow[0]);
+            $toUrl = $this->replaceToUrlDomain($csvRow[1]);
 
             $rows[] = ['from_url'=>$fromUrl,'to_url'=>$toUrl];
 

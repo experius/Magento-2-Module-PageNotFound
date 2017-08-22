@@ -154,6 +154,10 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $params = (!empty($this->getParams(true))) ? $queryStart . $this->getParams(true) : '';
         $url = $url . $params;
 
+        header("HTTP/1.1 301 Moved Permanently");
+        header("Location: " . $url);
+        exit();
+
         $this->response->setRedirect($url,$code);
         $this->getRequest()->setDispatched(true);
         $this->getRequest()->setParam('no_cache', true);
