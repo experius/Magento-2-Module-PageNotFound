@@ -3,11 +3,15 @@
 	<acl>
 		<resources>
 			<resource id="Magento_Backend::admin">
-				<resource id="Experius_PageNotFound::page_not_found" sortOrder="10" title="page_not_found">
-					<resource id="Experius_PageNotFound::page_not_found_save" sortOrder="10" title="Save page_not_found"/>
-					<resource id="Experius_PageNotFound::page_not_found_delete" sortOrder="20" title="Delete page_not_found"/>
-					<resource id="Experius_PageNotFound::page_not_found_update" sortOrder="30" title="Update page_not_found"/>
-					<resource id="Experius_PageNotFound::page_not_found_view" sortOrder="40" title="View page_not_found"/>
+				<resource id="Magento_Backend::system">
+					<resource id="Magento_Backend::tools">
+						<resource id="Experius_PageNotFound::page_not_found" sortOrder="10" title="404 reports">
+							<resource id="Experius_PageNotFound::page_not_found_save" sortOrder="10" title="Save 404 reports"/>
+							<resource id="Experius_PageNotFound::page_not_found_delete" sortOrder="20" title="Delete 404 reports"/>
+							<resource id="Experius_PageNotFound::page_not_found_update" sortOrder="30" title="Update 404 reports"/>
+							<resource id="Experius_PageNotFound::page_not_found_view" sortOrder="40" title="View 404 reports"/>
+						</resource>
+					</resource>
 				</resource>
 			</resource>
 		</resources>
