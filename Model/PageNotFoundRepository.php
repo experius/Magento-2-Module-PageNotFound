@@ -87,11 +87,34 @@ class PageNotFoundRepository implements PageNotFoundRepositoryInterface
         return $pageNotFound;
     }
 
+    public function get($pageIdentifier) {
+        if (!is_numeric($pageIdentifier)) {
+            /** @var \Experius\PageNotFound\Model\ResourceModel\PageNotFound $pageNotFoundResource */
+            $pageNotFoundResource = $this->pageNotFoundFactory->create()->getResource();
+            $pageIdentifier = $pageNotFoundResource->getIdByFromUrl($pageIdentifier);
+        }
+        return $this->getById($pageIdentifier);
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getById($pageNotFoundId)
     {
+        $pageNotFound = $this->pageNotFoundFactory->create();
+        $pageNotFound->getResource()->load($pageNotFound, $pageNotFoundId);
+        if (!$pageNotFound->getId()) {
+            throw new NoSuchEntityException(__('page_not_found with id "%1" does not exist.', $pageNotFoundId));
+        }
+        return $pageNotFound;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getByFromUrl($pageNotFoundUrl)
+    {
+
         $pageNotFound = $this->pageNotFoundFactory->create();
         $pageNotFound->getResource()->load($pageNotFound, $pageNotFoundId);
         if (!$pageNotFound->getId()) {
@@ -122,6 +145,9 @@ class PageNotFoundRepository implements PageNotFoundRepositoryInterface
         if ($sortOrders) {
             /** @var SortOrder $sortOrder */
             foreach ($sortOrders as $sortOrder) {
+                if (!$sortOrder->getField()) {
+                    continue;
+                }
                 $collection->addOrder(
                     $sortOrder->getField(),
                     ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? 'ASC' : 'DESC'
@@ -130,7 +156,6 @@ class PageNotFoundRepository implements PageNotFoundRepositoryInterface
         }
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
-        
         $searchResults = $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
         $searchResults->setTotalCount($collection->getSize());
