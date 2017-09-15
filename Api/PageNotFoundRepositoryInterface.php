@@ -22,6 +22,14 @@ interface PageNotFoundRepositoryInterface
 
     /**
      * Retrieve page_not_found
+     * @param string|int $pageNotFoundId
+     * @return \Experius\PageNotFound\Api\Data\PageNotFoundInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function get($pageNotFoundId);
+
+    /**
+     * Retrieve page_not_found
      * @param string $pageNotFoundId
      * @return \Experius\PageNotFound\Api\Data\PageNotFoundInterface
      * @throws \Magento\Framework\Exception\LocalizedException
