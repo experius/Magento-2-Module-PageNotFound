@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Experius\PageNotFound\Setup;
 
 use Magento\Framework\Setup\ModuleContextInterface;
