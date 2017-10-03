@@ -74,7 +74,8 @@ class PageNotFound extends \Magento\Framework\Model\AbstractModel implements Pag
     }
 
     /**
-     * @return int
+     * Get count
+     * @return string
      */
     public function getCount()
     {
@@ -83,7 +84,7 @@ class PageNotFound extends \Magento\Framework\Model\AbstractModel implements Pag
 
     /**
      * Set count
-     * @param int $count
+     * @param string $count
      * @return \Experius\PageNotFound\Api\Data\PageNotFoundInterface
      */
     public function setCount($count)
@@ -93,7 +94,7 @@ class PageNotFound extends \Magento\Framework\Model\AbstractModel implements Pag
 
     /**
      * Get count_redirect
-     * @return int
+     * @return string
      */
     public function getCountRedirect()
     {
@@ -102,7 +103,7 @@ class PageNotFound extends \Magento\Framework\Model\AbstractModel implements Pag
 
     /**
      * Set count_redirect
-     * @param int $count_redirect
+     * @param string $count_redirect
      * @return \Experius\PageNotFound\Api\Data\PageNotFoundInterface
      */
     public function setCountRedirect($count_redirect)
