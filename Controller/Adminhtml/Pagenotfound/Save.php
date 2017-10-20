@@ -54,6 +54,8 @@ class Save extends \Magento\Backend\App\Action
                 return $resultRedirect->setPath('*/*/');
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
+            } catch (AlreadyExistsException $e){
+                $this->messageManager->addErrorMessage($e->getMessage());
             } catch (\Exception $e) {
                 $this->messageManager->addExceptionMessage($e, __('Something went wrong while saving the Page Not Found.'));
             }
