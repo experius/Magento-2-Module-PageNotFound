@@ -30,6 +30,15 @@ interface PageNotFoundRepositoryInterface
     public function getById($pageNotFoundId);
 
     /**
+     * Retrieve page_not_found
+     * @param string $pageNotFoundUrl
+     * @return \Experius\PageNotFound\Api\Data\PageNotFoundInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+
+    public function getByFromUrl($pageNotFoundUrl);
+
+    /**
      * Retrieve page_not_found matching the specified criteria.
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
      * @return \Experius\PageNotFound\Api\Data\PageNotFoundSearchResultsInterface

@@ -103,6 +103,19 @@ class PageNotFoundRepository implements PageNotFoundRepositoryInterface
     /**
      * {@inheritdoc}
      */
+    public function getByFromUrl($pageNotFoundUrl)
+    {
+        $pageNotFound = $this->pageNotFoundFactory->create();
+        $pageNotFound->getResource()->load($pageNotFound, $pageNotFoundUrl, 'from_url');
+        if (!$pageNotFound->getId()) {
+            throw new NoSuchEntityException(__('page_not_found with id "%1" does not exist.', $pageNotFoundId));
+        }
+        return $pageNotFound;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getList(
         \Magento\Framework\Api\SearchCriteriaInterface $criteria
     ) {
@@ -122,6 +135,9 @@ class PageNotFoundRepository implements PageNotFoundRepositoryInterface
         if ($sortOrders) {
             /** @var SortOrder $sortOrder */
             foreach ($sortOrders as $sortOrder) {
+                if (!$sortOrder->getField()) {
+                    continue;
+                }
                 $collection->addOrder(
                     $sortOrder->getField(),
                     ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? 'ASC' : 'DESC'
