@@ -76,7 +76,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         return $this->request;
     }
 
-    /* @return $action \Magento\Cms\Controller\Noroute\Index */
+    /* @return \Magento\Cms\Controller\Noroute\Index */
     protected function getAction(){
         return $this->action;
     }
@@ -147,20 +147,27 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         return false;
     }
 
-    protected function redirect($url, $code)
+    protected function redirect($url)
     {
-        // add all configured params to redirect url. <included_params_redirect>
-        $queryStart = ($this->urlHasParams($url)) ? '&' : '?';
-        $params = (!empty($this->getParams(true))) ? $queryStart . $this->getParams(true) : '';
-        $url = $url . $params;
 
-        header("HTTP/1.1 301 Moved Permanently");
+        if($url=='410'){
+            $url = $this->url->getUrl('experius_pagenotfound/response/gone', ['_secure' => true]);
+        } else {
+            // add all configured params to redirect url. <included_params_redirect>
+            $queryStart = ($this->urlHasParams($url)) ? '&' : '?';
+            $params = (!empty($this->getParams(true))) ? $queryStart . $this->getParams(true) : '';
+            $url = $url . $params;
+            header("HTTP/1.1 301 Moved Permanently");
+        }
+
         header("Location: " . $url);
         exit();
 
         $this->response->setRedirect($url,$code);
+
         $this->getRequest()->setDispatched(true);
         $this->getRequest()->setParam('no_cache', true);
+
         return $this->actionFactory->create('Magento\Framework\App\Action\Redirect');
     }
 }
