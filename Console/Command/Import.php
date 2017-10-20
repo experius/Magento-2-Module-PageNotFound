@@ -135,7 +135,7 @@ class Import extends Command
 
     protected function readCsv(){
 
-        $filePath = ($this->input->getOption(self::FILENAME_OPTION)) ? $this->input->getOptions(self::FILENAME_OPTION) : $this->directoryList->getPath($this->fileDirectory) . "/" . self::FILENAME_IMPORT;
+        $filePath = ($this->input->getOption(self::FILENAME_OPTION)) ? $this->input->getOption(self::FILENAME_OPTION) : $this->directoryList->getPath($this->fileDirectory) . "/" . self::FILENAME_IMPORT;
 
         if(!file_exists($filePath)){
             $this->output->writeln("File not found");
