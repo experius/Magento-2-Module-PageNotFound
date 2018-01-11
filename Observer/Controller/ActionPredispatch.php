@@ -22,13 +22,16 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
     
     protected $urlParts = [];
 
+    private $resultFactory;
+
     public function __construct(
         \Magento\Framework\UrlInterface $url,
         \Experius\PageNotFound\Model\PageNotFoundFactory $pageNotFoundFactory,
         \Magento\Framework\App\ResponseInterface $response,
         \Magento\Framework\App\ActionFactory $actionFactory,
         \Magento\Framework\App\Cache\State $cacheState,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Framework\Controller\ResultFactory $resultFactory
     ) {
         $this->url = $url;
         $this->pageNotFoundFactory = $pageNotFoundFactory;
@@ -36,6 +39,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $this->actionFactory = $actionFactory;
         $this->cacheState = $cacheState;
         $this->scopeConfig = $scopeConfig;
+        $this->resultFactory = $resultFactory;
     }
 
     private function isEnabled(){
@@ -151,7 +155,8 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
     {
 
         if($url=='410'){
-            $url = $this->url->getUrl('experius_pagenotfound/response/gone', ['_secure' => true]);
+            $result = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_FORWARD);
+            return $result->setModule('experius_pagenotfound')->setController('response')->forward('gone');
         } else {
             // add all configured params to redirect url. <included_params_redirect>
             $queryStart = ($this->urlHasParams($url)) ? '&' : '?';
