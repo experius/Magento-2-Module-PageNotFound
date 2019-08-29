@@ -108,7 +108,7 @@ class PageNotFoundRepository implements PageNotFoundRepositoryInterface
         $pageNotFound = $this->pageNotFoundFactory->create();
         $pageNotFound->getResource()->load($pageNotFound, $pageNotFoundUrl, 'from_url');
         if (!$pageNotFound->getId()) {
-            throw new NoSuchEntityException(__('page_not_found with id "%1" does not exist.', $pageNotFoundId));
+            throw new NoSuchEntityException(__('page_not_found with id "%1" does not exist.', $pageNotFound->getId()));
         }
         return $pageNotFound;
     }
