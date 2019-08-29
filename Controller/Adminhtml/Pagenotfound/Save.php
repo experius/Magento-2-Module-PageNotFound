@@ -4,6 +4,7 @@
 namespace Experius\PageNotFound\Controller\Adminhtml\Pagenotfound;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\AlreadyExistsException;
 
 class Save extends \Magento\Backend\App\Action
 {
