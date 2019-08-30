@@ -175,8 +175,9 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
         header("Location: " . $url);
         // Exit usage for problems with FPC
-        // phpcs:ignore Magento2.Security.LanguageConstruct.ExitUsage
+        // phpcs:disable
         exit();
+        // phpcs:enable
 
         $this->response->setRedirect($url,$code);
 
