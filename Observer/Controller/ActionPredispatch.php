@@ -126,6 +126,9 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         }
     }
 
+     /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     protected function getParams($redirect=true){
 
         $queryArray = $this->getRequest()->getParams();
@@ -151,6 +154,11 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         return false;
     }
 
+    /**
+     * @param $url
+     * @return \Magento\Framework\App\ActionInterface
+     * @SuppressWarnings(PHPMD)
+     */
     protected function redirect($url)
     {
 
@@ -166,7 +174,10 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         }
 
         header("Location: " . $url);
+        // Exit usage for problems with FPC
+        // phpcs:disable
         exit();
+        // phpcs:enable
 
         $this->response->setRedirect($url,$code);
 
