@@ -20,5 +20,6 @@ Location in the admin panel: System > Tools > 404 Reports
 
 1. Create a csv called "pagenotfound.csv" with two two columns: from and to url (don't add column headers)
 2. Add the full url including https:// (for both from and to url) to this csv
-3. Upload csv on the Magento server (f.e. var/import folder)
-4. Run the import file command including the url from the previous step 
+3. Use semicolon (";") as your separator
+4. Upload csv on the Magento server (f.e. var/import folder)
+5. Run the import file command including the url from the previous step 
