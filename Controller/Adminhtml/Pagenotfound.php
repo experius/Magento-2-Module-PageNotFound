@@ -7,7 +7,7 @@ abstract class Pagenotfound extends \Magento\Backend\App\Action
 {
 
     protected $_coreRegistry;
-    const ADMIN_RESOURCE = 'Experius_PageNotFound::top_level';
+    const ADMIN_RESOURCE = 'Experius_PageNotFound::page_not_found_view';
 
     /**
      * @param \Magento\Backend\App\Action\Context $context
