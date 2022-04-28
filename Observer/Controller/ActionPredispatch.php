@@ -42,16 +42,22 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $this->resultFactory = $resultFactory;
     }
 
-    private function isEnabled(){
-        return $this->scopeConfig->getValue('pagenotfound/general/enabled',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    private function isEnabled()
+    {
+        $configValue = $this->scopeConfig->getValue('pagenotfound/general/enabled',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $configValue ? explode(',',$configValue) : [];
     }
 
-    private function includedParamsInRedirect(){
-        return explode(',',$this->scopeConfig->getValue('pagenotfound/general/included_params_redirect',\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+    private function includedParamsInRedirect()
+    {
+        $configValue = $this->scopeConfig->getValue('pagenotfound/general/included_params_redirect',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $configValue ? explode(',',$configValue) : [];
     }
 
-    private function includedParamsInFromUrl(){
-        return explode(',',$this->scopeConfig->getValue('pagenotfound/general/included_params_from_url',\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+    private function includedParamsInFromUrl()
+    {
+        $configValue = $this->scopeConfig->getValue('pagenotfound/general/included_params_from_url',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $configValue ? explode(',',$configValue) : [];
     }
 
     public function execute(
