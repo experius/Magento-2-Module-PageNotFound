@@ -30,6 +30,8 @@ class Import extends Command
 
     protected $input;
     protected $output;
+    
+    protected $pageNotFoundFactory;
 
     public function __construct(
         \Magento\Framework\File\Csv $csv,
