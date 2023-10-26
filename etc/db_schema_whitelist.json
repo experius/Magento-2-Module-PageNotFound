@@ -1,0 +1,14 @@
+{
+    "experius_page_not_found": {
+        "column": {
+            "page_not_found_id": true,
+            "from_url": true,
+            "to_url": true,
+            "count": true,
+            "count_redirect": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
