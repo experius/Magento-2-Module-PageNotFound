@@ -1,9 +1,14 @@
+<?php
+/**
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
 <dl>
-    <dt><?php echo __('The page you requested was not found, and we have a fine guess why.'); ?></dt>
+    <dt><?php $escaper->escapeHtml(__('The page you requested was not found, and we have a fine guess why.')); ?></dt>
     <dd>
         <ul class="disc">
-            <li><?php echo __('If you typed the URL directly, please make sure the spelling is correct.'); ?></li>
-            <li><?php echo __('If you clicked on a link to get here, the link is outdated.'); ?></li>
+            <li><?php $escaper->escapeHtml(__('If you typed the URL directly, please make sure the spelling is correct.')); ?></li>
+            <li><?php $escaper->escapeHtml(__('If you clicked on a link to get here, the link is outdated.')); ?></li>
         </ul>
     </dd>
 </dl>
