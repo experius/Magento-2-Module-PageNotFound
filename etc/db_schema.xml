@@ -4,7 +4,7 @@
     <table name="experius_page_not_found" resource="default" engine="innodb" comment="experius_page_not_found">
         <column xsi:type="int" name="page_not_found_id" padding="10" unsigned="true" nullable="false" identity="true"
                 comment="Entity ID"/>
-        <column xsi:type="text" name="from_url" nullable="true" comment="from_url"/>
+        <column xsi:type="varchar" name="from_url" nullable="true" comment="from_url" length="520"/>
         <column xsi:type="text" name="to_url" nullable="true" comment="to_url"/>
         <column xsi:type="int" name="count" padding="11" unsigned="false" nullable="true" identity="false"
                 comment="count"/>
@@ -13,5 +13,8 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="page_not_found_id"/>
         </constraint>
+        <index referenceId="EXPERIUS_PAGE_NOT_FOUND_FROM_URL" indexType="btree">
+            <column name="from_url"/>
+        </index>
     </table>
 </schema>
