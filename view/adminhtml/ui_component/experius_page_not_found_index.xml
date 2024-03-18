@@ -128,7 +128,15 @@
 				</item>
 			</argument>
 		</column>
-		<actionsColumn class="Experius\PageNotFound\Ui\Component\Listing\Column\PagenotfoundActions" name="actions">
+        <column name="last_visited">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <dateFormat>yyyy-MM-dd</dateFormat>
+                <label translate="true">last visited</label>
+            </settings>
+        </column>
+        <actionsColumn class="Experius\PageNotFound\Ui\Component\Listing\Column\PagenotfoundActions" name="actions">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="indexField" xsi:type="string">page_not_found_id</item>
