@@ -10,6 +10,7 @@
                 comment="count"/>
         <column xsi:type="int" name="count_redirect" padding="11" unsigned="false" nullable="true" identity="false"
                 comment="count_redirect"/>
+        <column xsi:type="date" name="last_visited" nullable="true" comment="count_redirect"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="page_not_found_id"/>
         </constraint>

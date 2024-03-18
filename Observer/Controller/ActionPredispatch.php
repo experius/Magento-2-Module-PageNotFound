@@ -19,7 +19,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
     protected $request;
 
     protected $action;
-    
+
     protected $urlParts = [];
 
     private $resultFactory;
@@ -112,6 +112,8 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $pageNotFoundModel = $this->pageNotFoundFactory->create();
 
         $pageNotFoundModel->load($fromUrl,'from_url');
+        $curentDate = date("Y-m-d");
+        $pageNotFoundModel->setLastVisited($curentDate);
 
         if($pageNotFoundModel->getId()){
             $count = $pageNotFoundModel->getCount();
