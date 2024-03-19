@@ -1,26 +1,27 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-	<preference for="Experius\PageNotFound\Api\PageNotFoundRepositoryInterface" type="Experius\PageNotFound\Model\PageNotFoundRepository"/>
-	<preference for="Experius\PageNotFound\Api\Data\PageNotFoundInterface" type="Experius\PageNotFound\Model\PageNotFound"/>
-	<preference for="Experius\PageNotFound\Api\Data\PageNotFoundSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
-	<virtualType name="Experius\PageNotFound\Model\ResourceModel\PageNotFound\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
-		<arguments>
-			<argument name="mainTable" xsi:type="string">experius_page_not_found</argument>
-			<argument name="resourceModel" xsi:type="string">Experius\PageNotFound\Model\ResourceModel\PageNotFound\Collection</argument>
-		</arguments>
-	</virtualType>
-	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
-		<arguments>
-			<argument name="collections" xsi:type="array">
-				<item name="experius_page_not_found_grid_data_source" xsi:type="string">Experius\PageNotFound\Model\ResourceModel\PageNotFound\Grid\Collection</item>
-			</argument>
-		</arguments>
-	</type>
-	<type name="Magento\Framework\Console\CommandList">
-		<arguments>
-			<argument name="commands" xsi:type="array">
-				<item name="experius_pagenotfound_import" xsi:type="object">Experius\PageNotFound\Console\Command\Import</item>
-			</argument>
-		</arguments>
-	</type>
+    <preference for="Experius\PageNotFound\Api\PageNotFoundRepositoryInterface" type="Experius\PageNotFound\Model\PageNotFoundRepository"/>
+    <preference for="Experius\PageNotFound\Api\Data\PageNotFoundInterface" type="Experius\PageNotFound\Model\PageNotFound"/>
+    <preference for="Experius\PageNotFound\Api\Data\PageNotFoundSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <virtualType name="Experius\PageNotFound\Model\ResourceModel\PageNotFound\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">experius_page_not_found</argument>
+            <argument name="resourceModel" xsi:type="string">Experius\PageNotFound\Model\ResourceModel\PageNotFound\Collection</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="experius_page_not_found_grid_data_source" xsi:type="string">Experius\PageNotFound\Model\ResourceModel\PageNotFound\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="experius_pagenotfound_import" xsi:type="object">Experius\PageNotFound\Console\Command\Import</item>
+                <item name="clean" xsi:type="object">Experius\PageNotFound\Console\Command\Clean</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
