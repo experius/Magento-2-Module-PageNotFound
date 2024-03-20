@@ -13,9 +13,9 @@ use Magento\Framework\App\Helper\AbstractHelper;
 class Settings extends AbstractHelper
 {
 
-    const IS_CRON_ENABLED = 'pagenotfound/config/is_cron_enabled';
-    const CONFIG_DAYS_TO_CLEAN = 'pagenotfound/config/days_to_clean';
-    const DELETE_NOT_EMPTY_REDIRECT = 'pagenotfound/config/delete_not_empty_redirect';
+    const IS_CRON_ENABLED = 'pagenotfound/cron_config/is_cron_enabled';
+    const CONFIG_DAYS_TO_CLEAN = 'pagenotfound/cron_config/days_to_clean';
+    const DELETE_NOT_EMPTY_REDIRECT = 'pagenotfound/cron_config/delete_not_empty_redirect';
 
     /**
      * @param Context $context

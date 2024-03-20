@@ -21,7 +21,7 @@
                     <comment>comma separated. For example language,p,id</comment>
                 </field>
             </group>
-            <group id="config" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+            <group id="cron_config" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
                 <label>config</label>
                 <field id="is_cron_enabled" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
                     <label>Enable cronjob</label>
