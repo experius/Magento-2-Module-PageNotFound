@@ -96,7 +96,7 @@ class UrlCleanUp
             $where
         );
 
-        $this->logger->info(__('Experius 404 url Cleanup: Removed %1 records', $deletionCount));
+        $this->logger->info(__('Experius 404 url Cleanup: Removed %1 records.', $deletionCount));
 
         return $deletionCount;
     }

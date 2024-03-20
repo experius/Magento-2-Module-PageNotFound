@@ -34,7 +34,7 @@ class Clean
     public function execute(): void
     {
         if(!$this->settings->getIsCronEnabled()){
-            $this->logger->info(__("cron is disabled for '404 reports'"));
+            $this->logger->info(__("Cron is disabled for '404 reports'"));
             return;
         }
         if(!$this->cleanHelper->execute()){

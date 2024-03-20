@@ -14,9 +14,6 @@ class Clean extends Command
 {
 
     const DAYS = "days";
-    const NAME = 'name';
-
-    const NAME_OPTION = "option";
 
     public function __construct(
         private UrlCleanUp $cleanUp,
@@ -41,7 +38,7 @@ class Clean extends Command
         ];
 
         $this->setName("experius_pagenotfound:clean")
-            ->setDescription("cleanup old reports")
+            ->setDescription("Cleanup old reports.")
             ->setDefinition($options);
 
         parent::configure();
@@ -51,11 +48,11 @@ class Clean extends Command
     {
         if ($days = $input->getOption(self::DAYS)) {
 
-            $output->writeln("deleting everyting older than " . $days . " days");
+            $output->writeln("Deleting everything older than " . $days . " days.");
             $deletionCount = $this->cleanUp->execute($days);
-            $output->writeln('removed ' . $deletionCount . ' from 404 reports');
+            $output->writeln('Removed ' . $deletionCount . ' from 404 reports.');
         } else {
-            $output->writeln("No days given, using days from admin if available");
+            $output->writeln("No days given, using days from admin if available.");
         }
         return \Magento\Framework\Console\Cli::RETURN_SUCCESS;
     }
