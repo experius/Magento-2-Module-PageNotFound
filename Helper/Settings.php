@@ -7,24 +7,25 @@ declare(strict_types=1);
 
 namespace Experius\PageNotFound\Helper;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Helper\AbstractHelper;
 
 class Settings extends AbstractHelper
 {
 
-    const IS_CRON_ENABLED = 'page_not_found/config/is_cron_enabled';
-    const CONFIG_DAYS_TO_CLEAN = 'page_not_found/config/days_to_clean';
-    const DELETE_NOT_EMPTY_REDIRECT = 'page_not_found/config/delete_not_empty_redirect';
+    const IS_CRON_ENABLED = 'pagenotfound/config/is_cron_enabled';
+    const CONFIG_DAYS_TO_CLEAN = 'pagenotfound/config/days_to_clean';
+    const DELETE_NOT_EMPTY_REDIRECT = 'pagenotfound/config/delete_not_empty_redirect';
 
     /**
-     * @param \Magento\Framework\App\Helper\Context $context
+     * @param Context $context
      */
     public function __construct(
-        \Magento\Framework\App\Helper\Context $context
+        Context $context
     ) {
         parent::__construct($context);
     }
+
     /**
      * @return bool
      */

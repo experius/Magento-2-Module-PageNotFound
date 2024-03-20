@@ -1,26 +1,22 @@
 <?xml version="1.0" ?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="page_not_found" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+        <section id="pagenotfound" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
             <label>404 Reports</label>
             <tab>advanced</tab>
             <resource>Experius_PageNotFound::config_experius_pagenotfound</resource>
             <group id="general" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
                 <label>General</label>
-                <field id="enabled" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label"
-                       type="select">
+                <field id="enabled" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
                     <label>Enabled</label>
                     <comment/>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="included_params_from_url" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20"
-                       translate="label" type="text">
+                <field id="included_params_from_url" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
                     <label>Included Params in From Url</label>
                     <comment>comma separated. For example language,p,id</comment>
                 </field>
-                <field id="included_params_redirect" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40"
-                       translate="label" type="text">
+                <field id="included_params_redirect" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
                     <label>Included Params in To Url</label>
                     <comment>comma separated. For example language,p,id</comment>
                 </field>
