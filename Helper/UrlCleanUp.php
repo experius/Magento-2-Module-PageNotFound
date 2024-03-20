@@ -44,7 +44,7 @@ class UrlCleanUp
             return (int)$days;
         }
 
-        return $this->settings->getConfigDaysToClean();
+        return (int)$this->settings->getConfigDaysToClean();
     }
 
     /**
@@ -53,18 +53,12 @@ class UrlCleanUp
      */
     public function execute($days = null): int
     {
-        $select = $this->connection->select();
-        $select->from(self::TABLE)
-            ->where('last_visited < ?',
-                ['lt' => date('c', time() - ($this->getDaysToClean($days) * (3600 * 24)))]);
+        $where = ("last_visited < '" . date('c', time() - ($this->getDaysToClean($days) * (3600 * 24))) . "'");
 
         if(!$this->settings->getDeleteNotEmpyRedirect())
-            $select->where('to_url IS NULL');
+            $where .= (' AND to_url IS NULL');
 
-        $deletionCount =  count($this->connection->fetchAll($select));
-        $deleteQuery =$this->connection->deleteFromSelect($select, self::TABLE);
-
-        $this->connection->query($deleteQuery)->execute();
+        $deletionCount = $this->connection->delete(self::TABLE, $where);
 
         $this->logger->info(__('Experius 404 url Cleanup: Removed %1 records.', $deletionCount));
 
