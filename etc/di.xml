@@ -20,7 +20,8 @@
 		<arguments>
 			<argument name="commands" xsi:type="array">
 				<item name="experius_pagenotfound_import" xsi:type="object">Experius\PageNotFound\Console\Command\Import</item>
-			</argument>
+                <item name="clean" xsi:type="object">Experius\PageNotFound\Console\Command\Clean</item>
+            </argument>
 		</arguments>
 	</type>
 </config>

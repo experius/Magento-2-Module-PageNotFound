@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="experius_pagenotfound_clean" instance="Experius\PageNotFound\Cron\Clean" method="execute">
+            <schedule>0 3 * * *</schedule>
+        </job>
+    </group>
+</config>

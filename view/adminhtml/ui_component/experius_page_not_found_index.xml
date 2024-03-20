@@ -133,7 +133,7 @@
                 <filter>dateRange</filter>
                 <dataType>date</dataType>
                 <dateFormat>yyyy-MM-dd</dateFormat>
-                <label translate="true">last visited</label>
+                <label translate="true">Last Visited</label>
             </settings>
         </column>
         <actionsColumn class="Experius\PageNotFound\Ui\Component\Listing\Column\PagenotfoundActions" name="actions">

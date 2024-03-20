@@ -7,6 +7,11 @@
                 <included_params_redirect/>
                 <included_params_from_url/>
             </general>
+            <cron_config>
+                <is_cron_enabled>0</is_cron_enabled>
+                <days_to_clean>90</days_to_clean>
+                <delete_not_empty_redirect>0</delete_not_empty_redirect>
+            </cron_config>
         </pagenotfound>
     </default>
 </config>
