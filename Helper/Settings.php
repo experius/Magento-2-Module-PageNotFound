@@ -35,7 +35,7 @@ class Settings extends AbstractHelper
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getConfigDaysToClean()
     {

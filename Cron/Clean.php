@@ -9,24 +9,21 @@ namespace Experius\PageNotFound\Cron;
 
 use Experius\PageNotFound\Helper\UrlCleanUp;
 use Experius\PageNotFound\Helper\Settings;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Store\Model\ScopeInterface;
 use Psr\Log\LoggerInterface;
-
 
 class Clean
 {
-
     /**
-     * @param UrlCleanUp $resourceConnection
+     * @param LoggerInterface $logger
+     * @param UrlCleanUp $cleanHelper
+     * @param Settings $settings
      */
     public function __construct(
         protected LoggerInterface $logger,
         protected UrlCleanUp $cleanHelper,
         protected Settings $settings
-    ) {
-    }
+    ) {}
+
     /**
      * Execute the cron
      * @return void
@@ -37,10 +34,6 @@ class Clean
             $this->logger->info(__("Cron is disabled for '404 reports'"));
             return;
         }
-        if(!$this->cleanHelper->execute()){
-            return;
-        }
-        $deletionCount = $this->cleanHelper->execute();
-        return;
+        $this->cleanHelper->execute();
     }
 }

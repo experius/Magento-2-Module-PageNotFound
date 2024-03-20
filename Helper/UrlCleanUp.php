@@ -18,83 +18,53 @@ class UrlCleanUp
      */
     protected $connection;
 
+    const TABLE = 'experius_page_not_found';
+
     /**
      * @param LoggerInterface $logger
      * @param ResourceConnection $resourceConnection
      * @param Settings $settings
      */
     public function __construct(
-        protected LoggerInterface $logger,
+        protected LoggerInterface    $logger,
         protected ResourceConnection $resourceConnection,
-        private Settings $settings
-    ) {
+        private Settings             $settings
+    )
+    {
         $this->connection = $this->resourceConnection->getConnection();
     }
 
-
     /**
      * Get days to clean
-     * @return mixed
+     * @return int
      */
-    public function getDaysToClean($days = null): mixed
+    public function getDaysToClean($days = null): int
     {
-        if($days){
+        if ($days) {
             return (int)$days;
         }
-        $daysToCleanConfig = $this->settings->getConfigDaysToClean();
 
-        if($daysToCleanConfig){
-            $this->logger->info(__("clearing everything older then %1 days", $daysToCleanConfig));
-            return (int)$daysToCleanConfig;
-        }
-
-        $this->logger->info(__("no days set in stores -> Configuration -> advanced -> 404 reports -> config"));
-
-        return false;
+        return $this->settings->getConfigDaysToClean();
     }
-
-
-    /**
-     * build querry
-     * @return mixed
-     */
-    public function addEmptyRedirectQuerry($where)
-    {
-        $getDeleteNotEmpyRedirect = $this->settings->getDeleteNotEmpyRedirect();
-        if(!$getDeleteNotEmpyRedirect){
-            $where .= " AND to_url is null";
-            return $where;
-        }
-
-        $where .= " AND to_url is not null";
-        return $where;
-    }
-
 
     /**
      * execute cleanup
      * @return int
      */
-    public function execute($days = null)//: int
+    public function execute($days = null): int
     {
-        $getDeleteNotEmpyRedirect=$this->settings->getDeleteNotEmpyRedirect();
+        $select = $this->connection->select();
+        $select->from(self::TABLE)
+            ->where('last_visited < ?',
+                ['lt' => date('c', time() - ($this->getDaysToClean($days) * (3600 * 24)))]);
 
-        if(!$this->getDaysToClean($days))
-        {
-            return 0;
-        }
-        $where = "last_visited < '" . date('c', time() - ($this->getDaysToClean($days) * (3600 * 24))) . "'";
+        if(!$this->settings->getDeleteNotEmpyRedirect())
+            $select->where('to_url IS NULL');
 
-        if(!$days) {
-            $where = $this->addEmptyRedirectQuerry($where);
-        } else {
-            $where .= " AND to_url is null";
-        }
+        $deletionCount =  count($this->connection->fetchAll($select));
+        $deleteQuery =$this->connection->deleteFromSelect($select, self::TABLE);
 
-        $deletionCount = $this->connection->delete(
-            $this->resourceConnection->getTableName('experius_page_not_found'),
-            $where
-        );
+        $this->connection->query($deleteQuery)->execute();
 
         $this->logger->info(__('Experius 404 url Cleanup: Removed %1 records.', $deletionCount));
 
