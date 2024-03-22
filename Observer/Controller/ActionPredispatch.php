@@ -119,6 +119,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $pageNotFoundModel->load($fromUrl,'from_url');
         $curentDate = date("Y-m-d");
         $pageNotFoundModel->setLastVisited($curentDate);
+
         $pageNotFoundModel->setStoreId($this->getStoreId());
 
         if($pageNotFoundModel->getId()){
@@ -206,7 +207,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
      * @return int
      */
     protected function getStoreId(): int{
-        Return $this->storeManager->getStore()->getId();
+        Return $this->storeManager->getStore()->getId() ?: 0;
     }
 
 }
