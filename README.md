@@ -7,6 +7,7 @@ This module saves all 404 urls to a database table.
 - It includes a count so you can see which 404 urls needs your attention first.
 - Allows you to configure a permanent redirect for the 404s found in the admin grid.
 - Saves the last visited date
+- Saves the storeview for easy filtering
 
 Admin grid location: System > Tools > 404 Reports
 

@@ -22,6 +22,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
     protected $urlParts = [];
 
+    protected $storeManager;
     private $resultFactory;
 
     public function __construct(
@@ -31,7 +32,9 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         \Magento\Framework\App\ActionFactory $actionFactory,
         \Magento\Framework\App\Cache\State $cacheState,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Framework\Controller\ResultFactory $resultFactory
+        \Magento\Framework\Controller\ResultFactory $resultFactory,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+
     ) {
         $this->url = $url;
         $this->pageNotFoundFactory = $pageNotFoundFactory;
@@ -40,6 +43,8 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $this->cacheState = $cacheState;
         $this->scopeConfig = $scopeConfig;
         $this->resultFactory = $resultFactory;
+        $this->storeManager = $storeManager;
+
     }
 
     private function isEnabled()
@@ -114,6 +119,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $pageNotFoundModel->load($fromUrl,'from_url');
         $curentDate = date("Y-m-d");
         $pageNotFoundModel->setLastVisited($curentDate);
+        $pageNotFoundModel->setStoreId($this->getStoreId());
 
         if($pageNotFoundModel->getId()){
             $count = $pageNotFoundModel->getCount();
@@ -194,4 +200,13 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
         return $this->actionFactory->create('Magento\Framework\App\Action\Redirect');
     }
+
+
+    /**
+     * @return int
+     */
+    protected function getStoreId(): int{
+        Return $this->storeManager->getStore()->getId();
+    }
+
 }
