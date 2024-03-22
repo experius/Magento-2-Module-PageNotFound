@@ -1,3 +1,9 @@
+## 1.3.8 (2023-10-26)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.3.8)
+
+*  [BUGFIX][IN23-62] Added last visited column in admin grid. *(Simon Vianen)*
+
 ## 1.3.5 (2023-10-26)
 
 [View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.3.5)
