@@ -1,3 +1,9 @@
+## 1.4.0 (2023-10-26)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.0)
+
+*  [FEATURE][IN23-325] Added cronjob and command to delete records older than the given days. *(Simon Vianen)*
+
 ## 1.3.8 (2023-10-26)
 
 [View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.3.8)
