@@ -129,4 +129,22 @@ class PageNotFound extends \Magento\Framework\Model\AbstractModel implements Pag
     {
         return $this->setData(self::LAST_VISITED, $last_visited);
     }
+    /**
+     * Get last_visited
+     * @return int
+     */
+    public function getStoreId()
+    {
+        return $this->getData(self::LAST_VISITED);
+    }
+
+    /**
+     * Set last_visited
+     * @param int $store_id
+     * @return \Experius\PageNotFound\Api\Data\PageNotFoundInterface
+     */
+    public function setStoreId($store_id)
+    {
+        return $this->setData(self::STORE_D, $store_id);
+    }
 }
