@@ -7,7 +7,7 @@ interface PageNotFoundInterface
 {
 
     const TO_URL = 'to_url';
-    const STORE_D = 'store_id';
+    const STORE_ID = 'store_id';
     const COUNT_REDIRECT = 'count_redirect';
     const LAST_VISITED = 'last_visited';
     const COUNT = 'count';
@@ -110,7 +110,7 @@ interface PageNotFoundInterface
     public function getStoreId();
 
     /**
-     * Set last_visited
+     * Set store_id
      * @param int $store_id
      * @return \Experius\PageNotFound\Api\Data\PageNotFoundInterface
      */
