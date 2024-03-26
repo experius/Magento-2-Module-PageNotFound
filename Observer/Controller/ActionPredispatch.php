@@ -122,9 +122,11 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
         $pageNotFoundModel->setStoreId($this->getStoreId());
 
-        if($pageNotFoundModel->getId()){
+        if($pageNotFoundModel->getId() && empty($pageNotFoundModel->getToUrl())){
             $count = $pageNotFoundModel->getCount();
             $pageNotFoundModel->setCount($count+1);
+        } elseif($pageNotFoundModel->getId() && !empty($pageNotFoundModel->getToUrl())){
+            $count = $pageNotFoundModel->getCount();
         } else {
             $pageNotFoundModel->setFromUrl($fromUrl);
             $pageNotFoundModel->setCount(1);
@@ -210,4 +212,10 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         Return $this->storeManager->getStore()->getId() ?: 0;
     }
 
+    protected function checkIfRedirecrt($fromUrl)
+    {
+        $isInDatabase = true;
+
+        return $isInDatabase;
+    }
 }
