@@ -1,16 +1,22 @@
-## 1.4.1 (2023-10-26)
+## 1.4.2 (2024-03-26)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.0)
+
+*  [FEATURE][IN23-284] Removed 404 counter when url is being redirected. *(Simon Vianen)*
+
+## 1.4.1 (2024-03-22)
 
 [View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.0)
 
 *  [FEATURE][IN23-284] Added store view to admin grid with select filter. *(Simon Vianen)*
 
-## 1.4.0 (2023-10-26)
+## 1.4.0 (2024-03-20)
 
 [View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.0)
 
 *  [FEATURE][IN23-325] Added cronjob and command to delete records older than the given days. *(Simon Vianen)*
 
-## 1.3.8 (2023-10-26)
+## 1.3.8 (2024-03-15)
 
 [View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.3.8)
 
