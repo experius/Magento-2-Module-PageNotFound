@@ -2,6 +2,8 @@
 
 namespace Experius\PageNotFound\Observer\Controller;
 
+use Magento\Store\Api\Data\StoreInterface;
+
 class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 {
     protected $url;
@@ -111,39 +113,47 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         return $url;
     }
 
-    protected function savePageNotFound($fromUrl){
-
+    protected function savePageNotFound($fromUrl, $isGraphql = false, StoreInterface $store = null)
+    {
         /* @var $pageNotFoundModel \Experius\PageNotFound\Model\PageNotFound */
         $pageNotFoundModel = $this->pageNotFoundFactory->create();
 
-        $pageNotFoundModel->load($fromUrl,'from_url');
+        $pageNotFoundModel->load($fromUrl, 'from_url');
         $curentDate = date("Y-m-d");
         $pageNotFoundModel->setLastVisited($curentDate);
 
         $pageNotFoundModel->setStoreId($this->getStoreId());
 
-        if($pageNotFoundModel->getId() && empty($pageNotFoundModel->getToUrl())){
+        if ($pageNotFoundModel->getId() && empty($pageNotFoundModel->getToUrl())) {
             $count = $pageNotFoundModel->getCount();
-            $pageNotFoundModel->setCount($count+1);
-        } elseif($pageNotFoundModel->getId() && !empty($pageNotFoundModel->getToUrl())){
+            $pageNotFoundModel->setCount($count + 1);
+        } elseif ($pageNotFoundModel->getId() && !empty($pageNotFoundModel->getToUrl())) {
             $count = $pageNotFoundModel->getCount();
         } else {
             $pageNotFoundModel->setFromUrl($fromUrl);
             $pageNotFoundModel->setCount(1);
         }
 
-        if($pageNotFoundModel->getToUrl()) {
-            $pageNotFoundModel->setCountRedirect($pageNotFoundModel->getCountRedirect()+1);
+        if ($pageNotFoundModel->getToUrl()) {
+            $pageNotFoundModel->setCountRedirect($pageNotFoundModel->getCountRedirect() + 1);
         }
 
         $pageNotFoundModel->save();
 
-        if($pageNotFoundModel->getToUrl()) {
+        if ($pageNotFoundModel->getToUrl()) {
+            if ($isGraphql) {
+                $baseUrl = $store->getBaseUrl();
+                if (!strpos($fromUrl, $baseUrl)) {
+                    $fromUrl = $baseUrl . ltrim($fromUrl, '/');
+                }
+                return str_replace($baseUrl, '', $pageNotFoundModel->getToUrl());
+            }
+
             return $this->redirect($pageNotFoundModel->getToUrl(), '301');
         }
     }
 
-     /**
+    /**
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function getParams($redirect=true){
