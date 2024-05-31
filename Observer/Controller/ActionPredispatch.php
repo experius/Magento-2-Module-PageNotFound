@@ -2,6 +2,8 @@
 
 namespace Experius\PageNotFound\Observer\Controller;
 
+use Experius\PageNotFound\Model\PageNotFound;
+use Magento\Framework\App\ActionInterface;
 use Magento\Store\Api\Data\StoreInterface;
 
 class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
@@ -113,14 +115,29 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         return $url;
     }
 
+    /**
+     * @param $fromUrl
+     * @param $isGraphql
+     * @param StoreInterface|null $store
+     * @return array|ActionInterface|string|string[]|void
+     * @throws \Exception
+     */
     protected function savePageNotFound($fromUrl, $isGraphql = false, StoreInterface $store = null)
     {
-        /* @var $pageNotFoundModel \Experius\PageNotFound\Model\PageNotFound */
+        /* @var $pageNotFoundModel PageNotFound */
         $pageNotFoundModel = $this->pageNotFoundFactory->create();
 
+        if ($isGraphql) {
+            // Create full url to return with GraphQL
+            $baseUrl = $store->getBaseUrl();
+            if (!strpos($fromUrl, $baseUrl)) {
+                $fromUrl = $baseUrl . ltrim($fromUrl, '/');
+            }
+        }
+
         $pageNotFoundModel->load($fromUrl, 'from_url');
-        $curentDate = date("Y-m-d");
-        $pageNotFoundModel->setLastVisited($curentDate);
+        $currentDate = date("Y-m-d");
+        $pageNotFoundModel->setLastVisited($currentDate);
 
         $pageNotFoundModel->setStoreId($this->getStoreId());
 
@@ -142,10 +159,6 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
         if ($pageNotFoundModel->getToUrl()) {
             if ($isGraphql) {
-                $baseUrl = $store->getBaseUrl();
-                if (!strpos($fromUrl, $baseUrl)) {
-                    $fromUrl = $baseUrl . ltrim($fromUrl, '/');
-                }
                 return str_replace($baseUrl, '', $pageNotFoundModel->getToUrl());
             }
 
