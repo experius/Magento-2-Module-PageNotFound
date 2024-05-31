@@ -10,6 +10,10 @@
         {
             "name": "Derrick Heesbeen",
             "email": "derrick@experius.nl"
+        },
+        {
+            "name": "Simon Vianen",
+            "email": "simonvianen@experius.nl"
         }
     ],
     "minimum-stability": "dev",
