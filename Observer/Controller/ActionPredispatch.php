@@ -234,11 +234,4 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
     protected function getStoreId(): int{
         Return $this->storeManager->getStore()->getId() ?: 0;
     }
-
-    protected function checkIfRedirecrt($fromUrl)
-    {
-        $isInDatabase = true;
-
-        return $isInDatabase;
-    }
 }
