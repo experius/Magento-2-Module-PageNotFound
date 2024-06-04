@@ -130,7 +130,8 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         if ($isGraphql) {
             // Create full url to return with GraphQL
             $baseUrl = $store->getBaseUrl();
-            if (!strpos($fromUrl, $baseUrl)) {
+            var_dump(strpos($fromUrl, $baseUrl));
+            if (strpos($fromUrl, $baseUrl) === false) {
                 $fromUrl = $baseUrl . ltrim($fromUrl, '/');
             }
         }
