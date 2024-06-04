@@ -1,26 +1,62 @@
+## 1.4.3 (2024-05-31)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.3)
+
+*  [FEATURE][JIRA-123]added graphQL suport in base function to extend pagenotfoundgraphql *(simon vianen)*
+*  [FEATURE][JIRA-123]git added docblock, fixt typo, changed from url creation for graphql to the top of the savePageNotFound Function *(simon vianen)*
+*  [FEATURE][JIRA-123]Added my name to the composer.json *(simon vianen)*
+
+
 ## 1.4.2 (2024-03-26)
 
-[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.0)
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.2)
 
-*  [FEATURE][IN23-284] Removed 404 counter when url is being redirected. *(Simon Vianen)*
+*  [FEATURE][JIRA-123]removed unnecessary 404 counter when url is being redirected *(simon vianen)*
+
 
 ## 1.4.1 (2024-03-22)
 
-[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.0)
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.1)
 
-*  [FEATURE][IN23-284] Added store view to admin grid with select filter. *(Simon Vianen)*
+*  [FEATURE][IN23-62] updated CHANGELOG.md *(simon vianen)*
+*  [FEATURE][IN23-325] updated CHANGELOG.md and README.md *(simon vianen)*
+*  [FEATURE][IN23-284] added storeview to admin grid with filter *(simon vianen)*
+*  [FEATURE][IN23-284] added '0' return to getStoreId if id is 'NUL' *(simon vianen)*
+*  [FEATURE][IN23-284] Fixed typo's *(simon vianen)*
+
 
 ## 1.4.0 (2024-03-20)
 
 [View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.0)
 
-*  [FEATURE][IN23-325] Added cronjob and command to delete records older than the given days. *(Simon Vianen)*
+*  [feature][IN23-325]added cron job and consol command *(simon vianen)*
+*  [FEATURE][IN23-325]Removed unused code and spel check *(simon vianen)*
+*  [feature][IN23-325]restored refactord code *(simon vianen)*
+*  [feature][IN23-325]added cron_config to config.xml *(simon vianen)*
+*  [feature][IN23-325] chaged code to fit magento core *(simon vianen)*
+*  [FEATURE][IN23-325]Shortend query buiding *(simon vianen)*
 
-## 1.3.8 (2024-03-15)
+
+## 1.3.8 (2024-03-18)
 
 [View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.3.8)
 
-*  [BUGFIX][IN23-62] Added last visited column in admin grid. *(Simon Vianen)*
+*  [FEATURE][IN23-62] added collumn last visited *(simon vianen)*
+
+
+## 1.3.7 (2024-03-07)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.3.7)
+
+*  [FEATURE][JIRA-1024] changed the from_url to varchar 520 + added index for column *(Thomas Mondeel)*
+
+
+## 1.3.6 (2024-02-02)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.3.6)
+
+*  [FEATURE][JIRA-123] compatible with magento-coding-standards 33 *(Matthijs Iriks)*
+
 
 ## 1.3.5 (2023-10-26)
 
