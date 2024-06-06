@@ -1,4 +1,4 @@
-## Magento 2 Module Experius Page Not Found 404
+# Magento 2 Module Experius Page Not Found 404
 
 This module saves all 404 urls to a database table.
 
