@@ -1,4 +1,4 @@
-**Magento 2 Module Experius Page Not Found 404**
+# Magento 2 Module Experius Page Not Found 404
 
 This module saves all 404 urls to a database table.
 
@@ -13,14 +13,19 @@ Admin grid location: System > Tools > 404 Reports
 
 Admin configuration location: Stores > Settings > Configuration > Advanced > 404 Reports
 
-**Why should you use it?** 
+## Why should you use it?
 
 1. Reports all 404s, not only the ones from Google. 
 2. Store owner can fix them by them 
 3. Import redirect list when migrating to M2.
 
+## Installation
 
-**How to use the import csv function?**
+```bash
+ composer require experius/module-pagenotfound
+```
+
+## How to use the import csv function?
 
 1. Create a csv called "pagenotfound.csv" with two two columns: from and to url (don't add column headers)
 2. Add the full url including https:// (for both from and to url) to this csv
@@ -29,7 +34,7 @@ Admin configuration location: Stores > Settings > Configuration > Advanced > 404
 5. Run the import file command including the url from the previous step 
 
 
-**cronjob**
+## cronjob
 
 - Can be turned on and off in the admin configuration
 - 404 reports with a redirect can be kept
@@ -37,7 +42,7 @@ Admin configuration location: Stores > Settings > Configuration > Advanced > 404
 - Runs once per day
 - Runs at 03:00 AM
 
-**command**
+## command
 
 - Command to delete records
 - Deletes records according to the config in the admin
