@@ -205,13 +205,12 @@ class Import extends Command
     /**
      * @param $fromUrl
      * @param $storeId
-     * @return int
      */
-    private function getStoreView($fromUrl): int
+    private function getStoreView($fromUrl)
     {
         $storeId = $this->storeManager->getDefaultStoreView()->getId();
         foreach ($this->storeRepository->getList() as $store) {
-            if (str_starts_with($fromUrl, $store->getBaseUrl())) {
+            if (strpos($fromUrl, $store->getBaseUrl(), 0)) {
                 $storeId = $store->getId();
                 break;
             }
