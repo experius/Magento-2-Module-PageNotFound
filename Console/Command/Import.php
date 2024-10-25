@@ -30,19 +30,25 @@ class Import extends Command
 
     protected $input;
     protected $output;
-    
+
     protected $pageNotFoundFactory;
+    protected $storeRepository;
+    protected $storeManager;
 
     public function __construct(
         \Magento\Framework\File\Csv $csv,
         \Magento\Framework\App\State $state,
         \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
-        \Experius\PageNotFound\Model\PageNotFoundFactory $pageNotFoundFactory
+        \Experius\PageNotFound\Model\PageNotFoundFactory $pageNotFoundFactory,
+        \Magento\Store\Api\StoreRepositoryInterface $storeRepository,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ){
         $this->csv = $csv;
         $this->state = $state;
         $this->directoryList = $directoryList;
         $this->pageNotFoundFactory = $pageNotFoundFactory;
+        $this->storeRepository = $storeRepository;
+        $this->storeManager = $storeManager;
 
         return parent::__construct();
     }
@@ -129,9 +135,11 @@ class Import extends Command
        $pageNotFound = $this->pageNotFoundFactory->create();
 
        $pageNotFound->load($fromUrl,'from_url');
+       $storeId = $this->getStoreView($fromUrl);
 
        $pageNotFound->setFromUrl($fromUrl);
        $pageNotFound->setToUrl($toUrl);
+       $pageNotFound->setStoreId($storeId);
        $pageNotFound->save();
     }
 
@@ -192,5 +200,21 @@ class Import extends Command
         $table->setHeaders(array('From url', 'To url'));
         $table->setRows($data);
         $table->render($data);
+    }
+
+    /**
+     * @param $fromUrl
+     * @param $storeId
+     */
+    private function getStoreView($fromUrl)
+    {
+        $storeId = $this->storeManager->getDefaultStoreView()->getId();
+        foreach ($this->storeRepository->getList() as $store) {
+            if (strpos($fromUrl, $store->getBaseUrl(), 0)) {
+                $storeId = $store->getId();
+                break;
+            }
+        }
+        return $storeId;
     }
 }
