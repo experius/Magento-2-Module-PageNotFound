@@ -210,7 +210,7 @@ class Import extends Command
     {
         $storeId = $this->storeManager->getDefaultStoreView()->getId();
         foreach ($this->storeRepository->getList() as $store) {
-            if (strpos($fromUrl, $store->getBaseUrl(), 0)) {
+            if (strpos($fromUrl, $store->getBaseUrl(), 0) !== false) {
                 $storeId = $store->getId();
                 break;
             }
