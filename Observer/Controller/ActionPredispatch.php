@@ -27,7 +27,10 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
     protected $urlParts = [];
 
     protected $storeManager;
+
     private $resultFactory;
+
+    protected $setting;
 
     public function __construct(
         \Magento\Framework\UrlInterface $url,
@@ -38,6 +41,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Controller\ResultFactory $resultFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Experius\PageNotFound\Helper\Settings $setting
 
     ) {
         $this->url = $url;
@@ -48,6 +52,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $this->scopeConfig = $scopeConfig;
         $this->resultFactory = $resultFactory;
         $this->storeManager = $storeManager;
+        $this->setting = $setting;
 
     }
 
@@ -86,8 +91,11 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
         $this->urlParts = parse_url($this->url->getCurrentUrl());
 
-        $this->savePageNotFound($this->getCurrentUrl());
+        if(in_array($this->urlParts['path'],$this->setting->getExcludedUrls())) {
+            return;
+        }
 
+        $this->savePageNotFound($this->getCurrentUrl());
     }
 
     /* @return \Magento\Framework\App\RequestInterface */
