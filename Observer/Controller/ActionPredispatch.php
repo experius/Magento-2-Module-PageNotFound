@@ -122,7 +122,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
      * @return array|ActionInterface|string|string[]|void
      * @throws \Exception
      */
-    protected function savePageNotFound($fromUrl, $isGraphql = false, StoreInterface $store = null)
+    protected function savePageNotFound($fromUrl, $isGraphql = false, ?StoreInterface $store = null)
     {
         /* @var $pageNotFoundModel PageNotFound */
         $pageNotFoundModel = $this->pageNotFoundFactory->create();
