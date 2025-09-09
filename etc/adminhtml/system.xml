@@ -20,6 +20,10 @@
                     <label>Included Params in To Url</label>
                     <comment>comma separated. For example language,p,id</comment>
                 </field>
+                <field id="exclude_url" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="textarea">
+                    <label>Exclude url</label>
+                    <comment>Enter all the URLs you want to exclude from the 'Page Not Found' module, separated by commas.</comment>
+                </field>
             </group>
             <group id="cron_config" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
                 <label>config</label>

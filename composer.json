@@ -14,6 +14,10 @@
         {
             "name": "Simon Vianen",
             "email": "simonvianen@experius.nl"
+        },
+        {
+            "name": "Jeffrey Leeuw",
+            "email": "jeffreyleeuw@happyhorizon.com"
         }
     ],
     "minimum-stability": "dev",

@@ -16,6 +16,7 @@ class Settings extends AbstractHelper
     const IS_CRON_ENABLED = 'pagenotfound/cron_config/is_cron_enabled';
     const CONFIG_DAYS_TO_CLEAN = 'pagenotfound/cron_config/days_to_clean';
     const DELETE_NOT_EMPTY_REDIRECT = 'pagenotfound/cron_config/delete_not_empty_redirect';
+    const GET_EXCLUDED_URLS = 'pagenotfound/general/exclude_url';
 
     /**
      * @param Context $context
@@ -48,6 +49,18 @@ class Settings extends AbstractHelper
     public function getDeleteNotEmpyRedirect()
     {
         return $this->scopeConfig->getValue(self::DELETE_NOT_EMPTY_REDIRECT);
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getExcludedUrls()
+    {
+        $excludedUrls = $this->scopeConfig->getValue(self::GET_EXCLUDED_URLS);
+        if ($excludedUrls) {
+            return explode(',', $excludedUrls);
+        }
+        return [];
     }
 
 }
