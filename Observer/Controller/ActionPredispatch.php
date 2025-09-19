@@ -69,6 +69,31 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         return $configValue ? explode(',',$configValue) : [];
     }
 
+    protected function getExcludeList()
+    {
+        $configValue = $this->scopeConfig->getValue('pagenotfound/general/exclude_list',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $configValue ? array_map('trim', explode(',', $configValue)) : [];
+    }
+
+    protected function shouldExcludeUrl($url)
+    {
+        $excludeList = $this->getExcludeList();
+        if (empty($excludeList)) {
+            return false;
+        }
+
+        $urlPath = parse_url($url, PHP_URL_PATH);
+        $urlPath = ltrim($urlPath, '/');
+        
+        foreach ($excludeList as $excludeItem) {        
+            if (strpos($urlPath, $excludeItem) !== false) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
     public function execute(
         \Magento\Framework\Event\Observer $observer
     ) {
@@ -86,7 +111,11 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
         $this->urlParts = parse_url($this->url->getCurrentUrl());
 
-        $this->savePageNotFound($this->getCurrentUrl());
+        $currentUrl = $this->getCurrentUrl();
+        
+        if (!$this->shouldExcludeUrl($currentUrl)) {
+            $this->savePageNotFound($currentUrl);
+        }
 
     }
 
