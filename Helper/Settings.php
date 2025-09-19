@@ -70,6 +70,8 @@ class Settings extends AbstractHelper
 
     public function getExcludeList()
     {
-        return $this->scopeConfig->getValue(self::EXCLUDE_LIST,\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $excludeList = $this->scopeConfig->getValue(self::EXCLUDE_LIST,\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $excludeList = explode(',', $excludeList);
+        return $excludeList;
     }
 }
