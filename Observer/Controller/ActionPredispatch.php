@@ -27,6 +27,9 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
     protected $urlParts = [];
 
     protected $storeManager;
+
+    protected $settings;
+
     private $resultFactory;
 
     public function __construct(
@@ -38,6 +41,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Controller\ResultFactory $resultFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Experius\PageNotFound\Helper\Settings $settings
 
     ) {
         $this->url = $url;
@@ -48,32 +52,34 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $this->scopeConfig = $scopeConfig;
         $this->resultFactory = $resultFactory;
         $this->storeManager = $storeManager;
-
+        $this->settings = $settings;
     }
 
-    private function isEnabled()
-    {
-        $configValue = $this->scopeConfig->getValue('pagenotfound/general/enabled',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        return $configValue ? explode(',',$configValue) : [];
-    }
 
-    private function includedParamsInRedirect()
+    protected function shouldExcludeUrl($url)
     {
-        $configValue = $this->scopeConfig->getValue('pagenotfound/general/included_params_redirect',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        return $configValue ? explode(',',$configValue) : [];
-    }
+        $excludeList = $this->settings->getExcludeList();
+        if (empty($excludeList)) {
+            return false;
+        }
 
-    private function includedParamsInFromUrl()
-    {
-        $configValue = $this->scopeConfig->getValue('pagenotfound/general/included_params_from_url',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        return $configValue ? explode(',',$configValue) : [];
+        $urlPath = parse_url($url, PHP_URL_PATH);
+        $urlPath = ltrim($urlPath, '/');
+        
+        foreach ($excludeList as $excludeItem) {        
+            if (strpos($urlPath, $excludeItem) !== false) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public function execute(
         \Magento\Framework\Event\Observer $observer
     ) {
 
-        if(!$this->isEnabled()){
+        if(!$this->settings->isEnabled()){
             return;
         }
 
@@ -86,7 +92,11 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
         $this->urlParts = parse_url($this->url->getCurrentUrl());
 
-        $this->savePageNotFound($this->getCurrentUrl());
+        $currentUrl = $this->getCurrentUrl();
+        
+        if (!$this->shouldExcludeUrl($currentUrl)) {
+            $this->savePageNotFound($currentUrl);
+        }
 
     }
 
@@ -173,7 +183,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
         $queryArray = $this->getRequest()->getParams();
 
-        $unsetParams = ($redirect) ? $this->includedParamsInRedirect() : $this->includedParamsInFromUrl();
+        $unsetParams = ($redirect) ? $this->settings->includedParamsInRedirect() : $this->settings->includedParamsInFromUrl();
 
         foreach($queryArray as $key=>$value){
 

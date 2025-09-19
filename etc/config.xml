@@ -6,6 +6,7 @@
                 <enabled>1</enabled>
                 <included_params_redirect/>
                 <included_params_from_url/>
+                <exclude_list>wp-content,wp-admin,.htaccess,robots.txt,favicon.ico,apple-touch-icon,sitemap.xml,wp-json,wp-includes,wp-config.php,license.txt,admin,phpmyadmin,backup,backups,old,test,tmp,temp,index.html,index.php</exclude_list>
             </general>
             <cron_config>
                 <is_cron_enabled>0</is_cron_enabled>

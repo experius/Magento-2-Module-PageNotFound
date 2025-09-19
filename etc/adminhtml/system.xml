@@ -20,6 +20,10 @@
                     <label>Included Params in To Url</label>
                     <comment>comma separated. For example language,p,id</comment>
                 </field>
+                <field id="exclude_list" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="60" translate="label" type="textarea">
+                    <label>Exclude List</label>
+                    <comment>Comma separated values that should not be logged to database. For example: wp-content,wp-admin,.htaccess,robots.txt</comment>
+                </field>
             </group>
             <group id="cron_config" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
                 <label>config</label>
