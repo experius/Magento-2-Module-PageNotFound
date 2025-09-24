@@ -1,10 +1,67 @@
-## 1.4.3 (2024-05-31)
+## 1.7.0 (2025-09-24)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.7.0)
+
+*  [FEATURE][BACI-448] implemented csv import from backend *(Dylan Maurits)*
+
+
+## 1.6.1 (2025-09-22)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.6.1)
+
+*  Modify getExcludeList to return an array *(Simon Vianen)*
+
+
+## 1.6.0 (2025-09-19)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.6.0)
+
+*  [FEATURE][IN23-453] Add configurable exclude list to be able to exclude url's from the logging *(Simon Vianen)*
+*  [FEATURE][IN23-453]Move settings to settings helper *(Simon Vianen)*
+
+
+## 1.5.2 (2025-08-21)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.5.2)
+
+*  [BUGFIX][NUA-149]update to use explicit nullable type *(Simon Vianen)*
+
+
+## 1.5.1 (2024-11-18)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.5.1)
+
+*  put '!==' next to stringpos because it didn't satisfy coding standards *(Simon Vianen)*
+
+
+## 1.5.0 (2024-10-25)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.5.0)
+
+*  Added MANUAL.md *(pascalexperius)*
+*  Update README.md *(Matthieu)*
+*  Update README.md *(Matthieu)*
+*  added function to get store code from url *(Simon Vianen)*
+*  [FEATURE][IN23-284]changed str_strt with strpos for php 7 compatibility *(Simon Vianen)*
+
+
+## 1.4.4 (2024-07-08)
+
+[View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.4)
+
+*  [BUGFIX] fixed issue where a var_dump breaks the grapql return *(thokiller)*
+
+
+## 1.4.3 (2024-06-04)
 
 [View Release](git@github.com:experius/Magento-2-Module-PageNotFound.git/commits/tag/1.4.3)
 
 *  [FEATURE][JIRA-123]added graphQL suport in base function to extend pagenotfoundgraphql *(simon vianen)*
 *  [FEATURE][JIRA-123]git added docblock, fixt typo, changed from url creation for graphql to the top of the savePageNotFound Function *(simon vianen)*
 *  [FEATURE][JIRA-123]Added my name to the composer.json *(simon vianen)*
+*  [FEATURE][JIRA-123]removed unused code *(simon vianen)*
+*  [DOCS] Updated the CHANGELOG.md *(simon vianen)*
+*   [FEATURE][JIRA-123]codescan update *(simon vianen)*
 
 
 ## 1.4.2 (2024-03-26)

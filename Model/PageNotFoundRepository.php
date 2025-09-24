@@ -1,24 +1,22 @@
 <?php
 
-
 namespace Experius\PageNotFound\Model;
 
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Api\DataObjectHelper;
 use Experius\PageNotFound\Api\Data\PageNotFoundInterfaceFactory;
-use Magento\Framework\Reflection\DataObjectProcessor;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Api\SortOrder;
-use Experius\PageNotFound\Api\PageNotFoundRepositoryInterface;
 use Experius\PageNotFound\Api\Data\PageNotFoundSearchResultsInterfaceFactory;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\Exception\CouldNotDeleteException;
+use Experius\PageNotFound\Api\PageNotFoundRepositoryInterface;
 use Experius\PageNotFound\Model\ResourceModel\PageNotFound as ResourcePageNotFound;
 use Experius\PageNotFound\Model\ResourceModel\PageNotFound\CollectionFactory as PageNotFoundCollectionFactory;
+use Magento\Framework\Api\DataObjectHelper;
+use Magento\Framework\Api\SortOrder;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Reflection\DataObjectProcessor;
+use Magento\Store\Model\StoreManagerInterface;
 
 class PageNotFoundRepository implements PageNotFoundRepositoryInterface
 {
-
     private $storeManager;
 
     protected $pageNotFoundCollectionFactory;
@@ -34,7 +32,6 @@ class PageNotFoundRepository implements PageNotFoundRepositoryInterface
     protected $resource;
 
     protected $dataObjectHelper;
-
 
     /**
      * @param ResourcePageNotFound $resource
@@ -130,7 +127,7 @@ class PageNotFoundRepository implements PageNotFoundRepositoryInterface
                 $collection->addFieldToFilter($filter->getField(), [$condition => $filter->getValue()]);
             }
         }
-        
+
         $sortOrders = $criteria->getSortOrders();
         if ($sortOrders) {
             /** @var SortOrder $sortOrder */
@@ -146,7 +143,7 @@ class PageNotFoundRepository implements PageNotFoundRepositoryInterface
         }
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
-        
+
         $searchResults = $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
         $searchResults->setTotalCount($collection->getSize());
