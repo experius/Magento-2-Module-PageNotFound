@@ -175,4 +175,21 @@ class PageNotFoundRepository implements PageNotFoundRepositoryInterface
     {
         return $this->delete($this->getById($pageNotFoundId));
     }
+
+    /**
+     * @param $ids
+     * @throws CouldNotDeleteException
+     */
+    public function bulkDelete($ids)
+    {
+        try {
+            if (!$ids) return 0;
+            return $this->resource->bulkDelete($ids);
+        } catch (\Exception $exception) {
+            throw new CouldNotDeleteException(__(
+                'Could not delete the items: %1',
+                $exception->getMessage()
+            ));
+        }
+    }
 }
