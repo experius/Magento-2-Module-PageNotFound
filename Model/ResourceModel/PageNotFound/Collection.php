@@ -5,7 +5,7 @@ namespace Experius\PageNotFound\Model\ResourceModel\PageNotFound;
 
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
-
+    protected $_idFieldName = 'page_not_found_id';
     /**
      * Define resource model
      *

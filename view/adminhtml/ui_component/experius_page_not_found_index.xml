@@ -41,6 +41,21 @@
 		<bookmark name="bookmarks"/>
 		<columnsControls name="columns_controls"/>
 		<filters name="listing_filters"/>
+        <massaction name="listing_massaction"
+                    component="Magento_Ui/js/grid/tree-massactions"
+                    class="\Magento\Catalog\Ui\Component\Product\MassAction">
+            <action name="delete">
+                <settings>
+                    <type>delete</type>
+                    <url path="experius_pagenotfound/pageNotFound/massDelete"/>
+                    <label translate="true">Delete items</label>
+                    <confirm>
+                        <title>Delete items</title>
+                        <message translate="true">Are you sure you want to delete the selected items?</message>
+                    </confirm>
+                </settings>
+            </action>
+        </massaction>
 		<paging name="listing_paging"/>
 	</listingToolbar>
 	<columns name="experius_page_not_found_columns">
