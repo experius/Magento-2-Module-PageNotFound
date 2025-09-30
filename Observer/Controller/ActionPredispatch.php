@@ -3,8 +3,10 @@
 namespace Experius\PageNotFound\Observer\Controller;
 
 use Experius\PageNotFound\Model\PageNotFound;
+use Experius\PageNotFound\Api\PageNotFoundRepositoryInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Store\Api\Data\StoreInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 {
@@ -32,6 +34,8 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
     private $resultFactory;
 
+    private $pageNotFoundRepository;
+
     public function __construct(
         \Magento\Framework\UrlInterface $url,
         \Experius\PageNotFound\Model\PageNotFoundFactory $pageNotFoundFactory,
@@ -41,7 +45,8 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Controller\ResultFactory $resultFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Experius\PageNotFound\Helper\Settings $settings
+        \Experius\PageNotFound\Helper\Settings $settings,
+        PageNotFoundRepositoryInterface $pageNotFoundRepository
 
     ) {
         $this->url = $url;
@@ -53,6 +58,7 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
         $this->resultFactory = $resultFactory;
         $this->storeManager = $storeManager;
         $this->settings = $settings;
+        $this->pageNotFoundRepository = $pageNotFoundRepository;
     }
 
 
@@ -134,38 +140,40 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
      */
     protected function savePageNotFound($fromUrl, $isGraphql = false, ?StoreInterface $store = null)
     {
-        /* @var $pageNotFoundModel PageNotFound */
-        $pageNotFoundModel = $this->pageNotFoundFactory->create();
-
         if ($isGraphql) {
             // Create full url to return with GraphQL
-            $baseUrl = $store->getBaseUrl();
+            /** @var \Magento\Store\Model\Store $storeModel */
+            $storeModel = $this->storeManager->getStore($store ? $store->getId() : null);
+            $baseUrl = $storeModel->getBaseUrl();
             if (strpos($fromUrl, $baseUrl) === false) {
                 $fromUrl = $baseUrl . ltrim($fromUrl, '/');
             }
         }
 
-        $pageNotFoundModel->load($fromUrl, 'from_url');
-        $currentDate = date("Y-m-d");
-        $pageNotFoundModel->setLastVisited($currentDate);
-
-        $pageNotFoundModel->setStoreId($this->getStoreId());
-
-        if ($pageNotFoundModel->getId() && empty($pageNotFoundModel->getToUrl())) {
-            $count = $pageNotFoundModel->getCount();
-            $pageNotFoundModel->setCount($count + 1);
-        } elseif ($pageNotFoundModel->getId() && !empty($pageNotFoundModel->getToUrl())) {
-            $count = $pageNotFoundModel->getCount();
-        } else {
+        try {
+            $pageNotFoundModel = $this->pageNotFoundRepository->getByFromUrl($fromUrl);
+        } catch (NoSuchEntityException $e) {
+            $pageNotFoundModel = $this->pageNotFoundFactory->create();
             $pageNotFoundModel->setFromUrl($fromUrl);
             $pageNotFoundModel->setCount(1);
+        }
+
+        $currentDate = date("Y-m-d");
+        $pageNotFoundModel->setLastVisited($currentDate);
+        $pageNotFoundModel->setStoreId($this->getStoreId());
+
+        if ($pageNotFoundModel->getPageNotFoundId() && empty($pageNotFoundModel->getToUrl())) {
+            $count = $pageNotFoundModel->getCount();
+            $pageNotFoundModel->setCount($count + 1);
+        } elseif ($pageNotFoundModel->getPageNotFoundId() && !empty($pageNotFoundModel->getToUrl())) {
+            $count = $pageNotFoundModel->getCount();
         }
 
         if ($pageNotFoundModel->getToUrl()) {
             $pageNotFoundModel->setCountRedirect($pageNotFoundModel->getCountRedirect() + 1);
         }
 
-        $pageNotFoundModel->save();
+        $this->pageNotFoundRepository->save($pageNotFoundModel);
 
         if ($pageNotFoundModel->getToUrl()) {
             if ($isGraphql) {
