@@ -60,12 +60,15 @@ class Settings extends AbstractHelper
 
     public function includedParamsInRedirect()
     {
-        return $this->scopeConfig->getValue(self::INCLUDED_PARAMS_REDIRECT,\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $configValue = $this->scopeConfig->getValue(self::INCLUDED_PARAMS_REDIRECT,\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $configValue ? explode(',',$configValue) : [];
     }
 
     public function includedParamsInFromUrl()
     {
-        return $this->scopeConfig->getValue(self::INCLUDED_PARAMS_FROM_URL,\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $configValue = $this->scopeConfig->getValue(self::INCLUDED_PARAMS_FROM_URL,\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $configValue ? explode(',',$configValue) : [];
+
     }
 
     public function getExcludeList()
