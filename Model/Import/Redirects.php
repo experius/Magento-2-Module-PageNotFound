@@ -111,6 +111,8 @@ class Redirects extends AbstractEntity
     * @param int $rowNum
     *
     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
     */
     public function validateRow(array $rowData, $rowNum): bool
     {
