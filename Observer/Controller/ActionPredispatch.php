@@ -2,61 +2,80 @@
 
 namespace Experius\PageNotFound\Observer\Controller;
 
+use Exception;
+use Experius\PageNotFound\Api\Data\PageNotFoundInterface;
+use Experius\PageNotFound\Helper\Settings;
 use Experius\PageNotFound\Model\PageNotFound;
-use Magento\Framework\App\ActionInterface;
+use Experius\PageNotFound\Model\PageNotFoundFactory;
+use Experius\PageNotFound\Model\PageNotFoundRepository;
+use Magento\Framework\App\ActionFactory;
+use Magento\Framework\App\Cache\State;
+use Magento\Framework\App\Request\Http;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
-class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
+class ActionPredispatch implements ObserverInterface
 {
-    protected $url;
+    /**
+     * @var array
+     */
+    protected array $urlParts = [];
 
-    protected $pageNotFoundFactory;
+    /**
+     * @var Http
+     */
+    protected Http $request;
 
-    protected $response;
+    /**
+     * @var mixed
+     */
+    protected mixed $action;
 
-    protected $actionFactory;
+    /**
+     * @var PageNotFoundInterface|null
+     */
+    protected ?PageNotFoundInterface $pageNotFoundEntry = null;
 
-    protected $scopeConfig;
-
-    protected $cacheState;
-
-    protected $request;
-
-    protected $action;
-
-    protected $urlParts = [];
-
-    protected $storeManager;
-
-    protected $settings;
-
-    private $resultFactory;
-
+    /**
+     * @param UrlInterface $url
+     * @param PageNotFoundFactory $pageNotFoundFactory
+     * @param ResponseInterface $response
+     * @param ActionFactory $actionFactory
+     * @param State $cacheState
+     * @param ScopeConfigInterface $scopeConfig
+     * @param ResultFactory $resultFactory
+     * @param StoreManagerInterface $storeManager
+     * @param Settings $settings
+     * @param PageNotFoundRepository $pageNotFoundRepository
+     */
     public function __construct(
-        \Magento\Framework\UrlInterface $url,
-        \Experius\PageNotFound\Model\PageNotFoundFactory $pageNotFoundFactory,
-        \Magento\Framework\App\ResponseInterface $response,
-        \Magento\Framework\App\ActionFactory $actionFactory,
-        \Magento\Framework\App\Cache\State $cacheState,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Framework\Controller\ResultFactory $resultFactory,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Experius\PageNotFound\Helper\Settings $settings
+        protected UrlInterface           $url,
+        protected PageNotFoundFactory    $pageNotFoundFactory,
+        protected ResponseInterface      $response,
+        protected ActionFactory          $actionFactory,
+        protected State                  $cacheState,
+        protected ScopeConfigInterface   $scopeConfig,
+        protected ResultFactory          $resultFactory,
+        protected StoreManagerInterface  $storeManager,
+        protected Settings               $settings,
+        protected PageNotFoundRepository $pageNotFoundRepository,
 
-    ) {
-        $this->url = $url;
-        $this->pageNotFoundFactory = $pageNotFoundFactory;
-        $this->response = $response;
-        $this->actionFactory = $actionFactory;
-        $this->cacheState = $cacheState;
-        $this->scopeConfig = $scopeConfig;
-        $this->resultFactory = $resultFactory;
-        $this->storeManager = $storeManager;
-        $this->settings = $settings;
+    )
+    {
     }
 
-
-    protected function shouldExcludeUrl($url)
+    /**
+     * @param $url
+     * @return bool
+     */
+    protected function shouldExcludeUrl($url): bool
     {
         $excludeList = $this->settings->getExcludeList();
         if (empty($excludeList)) {
@@ -65,183 +84,196 @@ class ActionPredispatch implements \Magento\Framework\Event\ObserverInterface
 
         $urlPath = parse_url($url, PHP_URL_PATH);
         $urlPath = ltrim($urlPath, '/');
-        
-        foreach ($excludeList as $excludeItem) {        
-            if (strpos($urlPath, $excludeItem) !== false) {
+
+        foreach ($excludeList as $excludeItem) {
+            if (str_contains($urlPath, $excludeItem)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
+    /**
+     * @param Observer $observer
+     * @return void
+     * @throws Exception
+     */
     public function execute(
-        \Magento\Framework\Event\Observer $observer
-    ) {
-
-        if(!$this->settings->isEnabled()){
+        Observer $observer
+    ): void
+    {
+        if (!$this->settings->isEnabled()) {
             return;
         }
 
         $this->request = $observer->getRequest();
         $this->action = $observer->getControllerAction();
-
-        foreach (['full_page'] as $type) {
-            $this->cacheState->setEnabled($type, false);
-        }
-
+        $type = 'full_page';
+        $this->cacheState->setEnabled($type, false);
         $this->urlParts = parse_url($this->url->getCurrentUrl());
-
         $currentUrl = $this->getCurrentUrl();
-        
+
         if (!$this->shouldExcludeUrl($currentUrl)) {
             $this->savePageNotFound($currentUrl);
         }
 
     }
 
-    /* @return \Magento\Framework\App\RequestInterface */
-    protected function getRequest(){
+    /**
+     * @return Http
+     */
+    protected function getRequest(): Http
+    {
         return $this->request;
     }
 
-    /* @return \Magento\Cms\Controller\Noroute\Index */
-    protected function getAction(){
+    /**
+     * @return mixed
+     */
+    protected function getAction(): mixed
+    {
         return $this->action;
     }
 
-    protected function getCurrentUrl(){
+    /**
+     * @return string
+     */
+    protected function getCurrentUrl(): string
+    {
         return $this->stripFromUrl();
     }
 
-    protected function stripFromUrl(){
-
+    /**
+     * @return string
+     */
+    protected function stripFromUrl(): string
+    {
         $url_parts = $this->urlParts;
 
         // remove all params from url and add only the configured ones. <included_params>
         $params = (!empty($this->getParams(false))) ? '?' . $this->getParams(false) : '';
-        $url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . $params;
-
-        return $url;
+        return $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . $params;
     }
 
     /**
      * @param $fromUrl
      * @param $isGraphql
      * @param StoreInterface|null $store
-     * @return array|ActionInterface|string|string[]|void
-     * @throws \Exception
+     * @return array|string|string[]|void
+     * @throws Exception
      */
     protected function savePageNotFound($fromUrl, $isGraphql = false, ?StoreInterface $store = null)
     {
-        /* @var $pageNotFoundModel PageNotFound */
-        $pageNotFoundModel = $this->pageNotFoundFactory->create();
+        $pageNotFoundModel = null;
+        $baseUrl = $store?->getBaseUrl();
 
-        if ($isGraphql) {
-            // Create full url to return with GraphQL
-            $baseUrl = $store->getBaseUrl();
-            if (strpos($fromUrl, $baseUrl) === false) {
-                $fromUrl = $baseUrl . ltrim($fromUrl, '/');
-            }
+        // Create full url to return with GraphQL
+        if ($isGraphql && !str_contains($fromUrl, $baseUrl)) {
+            $fromUrl = $baseUrl . ltrim($fromUrl, '/');
         }
 
-        $pageNotFoundModel->load($fromUrl, 'from_url');
-        $currentDate = date("Y-m-d");
-        $pageNotFoundModel->setLastVisited($currentDate);
-
-        $pageNotFoundModel->setStoreId($this->getStoreId());
-
-        if ($pageNotFoundModel->getId() && empty($pageNotFoundModel->getToUrl())) {
-            $count = $pageNotFoundModel->getCount();
-            $pageNotFoundModel->setCount($count + 1);
-        } elseif ($pageNotFoundModel->getId() && !empty($pageNotFoundModel->getToUrl())) {
-            $count = $pageNotFoundModel->getCount();
-        } else {
-            $pageNotFoundModel->setFromUrl($fromUrl);
-            $pageNotFoundModel->setCount(1);
+        try {
+            $this->pageNotFoundEntry = $this->pageNotFoundRepository->getByFromUrl($fromUrl);
+        } catch (NoSuchEntityException) {
+            $pageNotFoundModel = $this->pageNotFoundFactory->create();
         }
 
-        if ($pageNotFoundModel->getToUrl()) {
-            $pageNotFoundModel->setCountRedirect($pageNotFoundModel->getCountRedirect() + 1);
-        }
+        if ($pageNotFoundModel) {
+            $currentDate = date("Y-m-d");
+            $pageNotFoundModel->setLastVisited($currentDate);
+            $pageNotFoundModel->setStoreId($this->getStoreId());
 
-        $pageNotFoundModel->save();
-
-        if ($pageNotFoundModel->getToUrl()) {
-            if ($isGraphql) {
-                return str_replace($baseUrl, '', $pageNotFoundModel->getToUrl());
+            if (!$pageNotFoundModel->getId()) {
+                $pageNotFoundModel->setFromUrl($fromUrl);
+                $pageNotFoundModel->setCount(1);
             }
 
-            return $this->redirect($pageNotFoundModel->getToUrl(), '301');
+            if ($pageNotFoundModel->getToUrl()) {
+                $pageNotFoundModel->setCountRedirect($pageNotFoundModel->getCountRedirect() + 1);
+            }
+
+            $this->pageNotFoundRepository->save($pageNotFoundModel);
+        }
+
+        if ($this->pageNotFoundEntry) {
+            if ($this->pageNotFoundEntry->getToUrl()) {
+                return $this->redirect($this->pageNotFoundEntry->getToUrl(), $isGraphql, $baseUrl);
+            }
+
+            if (empty($this->pageNotFoundEntry->getToUrl())) {
+                $count = $this->pageNotFoundEntry->getCount();
+                $this->pageNotFoundEntry->setCount($count + 1);
+            }
         }
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @param bool $redirect
+     * @return string
      */
-    protected function getParams($redirect=true){
-
+    protected function getParams(bool $redirect = true): string
+    {
         $queryArray = $this->getRequest()->getParams();
-
         $unsetParams = ($redirect) ? $this->settings->includedParamsInRedirect() : $this->settings->includedParamsInFromUrl();
 
-        foreach($queryArray as $key=>$value){
+        foreach ($queryArray as $key => $value) {
 
-            if(!in_array($key,$unsetParams) || !in_array(strtolower($key),$unsetParams)){
+            if (!in_array($key, $unsetParams) || !in_array(strtolower($key), $unsetParams)) {
                 unset($queryArray[$key]);
             }
-
         }
 
         return http_build_query($queryArray);
     }
 
-    protected function urlHasParams($url){
+    /**
+     * @param $url
+     * @return bool
+     */
+    protected function urlHasParams($url): bool
+    {
         $urlParts = parse_url($url);
-        if(isset($urlParts['query']) && $urlParts['query']){
-            return true;
-        }
-        return false;
+        return isset($urlParts['query']) && $urlParts['query'];
     }
 
     /**
      * @param $url
-     * @return \Magento\Framework\App\ActionInterface
-     * @SuppressWarnings(PHPMD)
+     * @param $isGraphql
+     * @param $baseUrl
+     * @return array|string|string[]
      */
-    protected function redirect($url)
+    protected function redirect($url, $isGraphql, $baseUrl): array|string
     {
-
-        if($url=='410'){
-            $result = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_FORWARD);
-            return $result->setModule('experius_pagenotfound')->setController('response')->forward('gone');
-        } else {
-            // add all configured params to redirect url. <included_params_redirect>
-            $queryStart = ($this->urlHasParams($url)) ? '&' : '?';
-            $params = (!empty($this->getParams(true))) ? $queryStart . $this->getParams(true) : '';
-            $url = $url . $params;
-            header("HTTP/1.1 301 Moved Permanently");
+        if ($url && $isGraphql) {
+            return str_replace($baseUrl, '', $url);
         }
 
+        if ($url === '410') {
+            $result = $this->resultFactory->create(ResultFactory::TYPE_FORWARD);
+            return $result->setModule('experius_pagenotfound')->setController('response')->forward('gone');
+        }
+
+        // add all configured params to redirect url. <included_params_redirect>
+        $queryStart = ($this->urlHasParams($url)) ? '&' : '?';
+        $params = (!empty($this->getParams(true))) ? $queryStart . $this->getParams(true) : '';
+        $url .= $params;
+
+        header("HTTP/1.1 301 Moved Permanently");
         header("Location: " . $url);
+
         // Exit usage for problems with FPC
         // phpcs:disable
         exit();
         // phpcs:enable
-
-        $this->response->setRedirect($url,$code);
-
-        $this->getRequest()->setDispatched(true);
-        $this->getRequest()->setParam('no_cache', true);
-
-        return $this->actionFactory->create('Magento\Framework\App\Action\Redirect');
     }
-
 
     /**
      * @return int
+     * @throws NoSuchEntityException
      */
-    protected function getStoreId(): int{
-        Return $this->storeManager->getStore()->getId() ?: 0;
+    protected function getStoreId(): int
+    {
+        return $this->storeManager->getStore()->getId() ?: 0;
     }
 }
