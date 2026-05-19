@@ -56,12 +56,16 @@ class Import extends Command
     protected function execute(
         InputInterface $input,
         OutputInterface $output
-    ) {
+    ): int {
 
         $this->input = $input;
         $this->output = $output;
 
-        $this->state->setAreaCode('adminhtml');
+        try {
+            $this->state->getAreaCode();
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            $this->state->setAreaCode('adminhtml');
+        }
 
         $csvRows = $this->readCsv();
 
@@ -73,6 +77,7 @@ class Import extends Command
 
         $this->renderConversion($convertedRows);
 
+        return Command::SUCCESS;
     }
 
     protected function convertRows($csvRows){
