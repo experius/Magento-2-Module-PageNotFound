@@ -49,7 +49,7 @@ class Clean extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($days = $input->getOption(self::DAYS)) {
             if(!is_numeric($days)) {
