@@ -2,6 +2,8 @@
 
 namespace Experius\PageNotFound\Console\Command;
 
+use Magento\Framework\Console\Cli;
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -56,7 +58,7 @@ class Import extends Command
     protected function execute(
         InputInterface $input,
         OutputInterface $output
-    ) {
+    ): int {
 
         $this->input = $input;
         $this->output = $output;
@@ -73,6 +75,8 @@ class Import extends Command
 
         $this->renderConversion($convertedRows);
 
+    
+        return Cli::RETURN_SUCCESS;
     }
 
     protected function convertRows($csvRows){
