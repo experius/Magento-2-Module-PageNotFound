@@ -58,8 +58,8 @@ class Import extends Command
     protected function execute(
         InputInterface $input,
         OutputInterface $output
-    ): int {
-
+    ): int 
+    {
         $this->input = $input;
         $this->output = $output;
 
